@@ -14,14 +14,14 @@ letterA.txt letterB.txt letterC.txt letterD.txt letterE.txt
 Brace expansion with sequence:
 
 ```bash
-echo file{1..5}.txt
+[user@localhost ~]$ echo file{1..5}.txt
 file1.txt file2.txt file3.txt file4.txt file5.txt
 ```
 
 A good usecase could be to create a backup file from an existing one:
 
 ```bash
-cp file{,.backup}
+[user@localhost ~]$ cp file{,.backup}
 ```
 
 ## Tilde expansion
@@ -30,7 +30,7 @@ The tilde character (`~`) expands to the current's user home directory.
 If followed by a string without a slash (`/`), the string is interpreted as the username:
 
 ```bash
-cd ~user
+[user@localhost ~]$ cd ~user
 ```
 
 ## Variable expansion
@@ -38,15 +38,15 @@ cd ~user
 It converts a variable name with its value:
 
 ```bash
-USER=john
-echo $USER
+[user@localhost ~]$ USER=john
+[user@localhost ~]$ echo $USER
 john
 ```
 
 Use curly braces to separate the variable name from other characters:
 
 ```bash
-echo ${USER}.hello
+[user@localhost ~]$ echo ${USER}.hello
 john.hello
 ```
 
@@ -55,7 +55,7 @@ john.hello
 It replaces a command with its output:
 
 ```bash
-echo "Date: $(date +%F)"
+[user@localhost ~]$ echo "Date: $(date +%F)"
 Date: 2026-09-22
 ```
 

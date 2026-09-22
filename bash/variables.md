@@ -7,10 +7,8 @@ Shell variables are unique to a shell session. This means that these variables w
 Variable names can contain uppercase, lowercase, digits and underscore (`_`) and cannot start with a digit.
 
 ```bash
-NAME=john
-age=55
-full_name="john doe"
-_ID=1234
+[user@localhost ~]$ NAME=john
+[user@localhost ~]$ age=55
 ```
 
 ## View shell variables
@@ -18,7 +16,7 @@ _ID=1234
 To view the variables that are currently set, you can use `set`:
 
 ```bash
-set | less
+[user@localhost ~]$ set | less
 ```
 
 ## Remove a variable
@@ -26,7 +24,7 @@ set | less
 To remove a variable:
 
 ```bash
-unset NAME
+[user@localhost ~]$ unset NAME
 ```
 
 ## Environment variables
@@ -36,26 +34,26 @@ A shell variable can be used only by the shell, an **environment variable**, on 
 To create an environment variable:
 
 ```bash
-export FAVORITE_COLOR=green
+[user@localhost ~]$ export FAVORITE_COLOR=green
 ```
 
 To convert a shell variable to an environment variable:
 
 ```bash
-NAME=john
-export NAME
+[user@localhost ~]$ NAME=john
+[user@localhost ~]$ export NAME
 ```
 
 To view the environment variables, you can use `env`:
 
 ```bash
-env | less
+[user@localhost ~]$ env | less
 ```
 
 To unexport a variable without unsetting it:
 
 ```bash
-export -n NAME
+[user@localhost ~]$ export -n NAME
 ```
 
 ## Uppercase or lowercase
@@ -85,7 +83,7 @@ The dot (`.`) is an alias for `source`.
 An alias is just another name for a command:
 
 ```bash
-alias ll="ls -l"
+[user@localhost ~]$ alias ll="ls -l"
 ```
 
 To remove an alias:

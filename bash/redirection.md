@@ -20,37 +20,37 @@ If a process opens other files, they will be identified with a file descriptor h
 - Redirect `stdout` to overwrite a file:
 
 ```bash
-> file
+[user@localhost ~]$ echo "hello" > file
 ```
 
 - Redirect `stdout` to append to a file:
 
 ```bash
->> file
+[user@localhost ~]$ echo "hello" >> file
 ```
 
 - Redirect `stderr` to overwrite a file:
 
 ```bash
-2> file
+[user@localhost ~]$ echo "hello" 2> file
 ```
 
 - Redirect `stdout` and `stderr` to overwrite a file:
 
 ```bash
-&> file
+[user@localhost ~]$ echo "hello" &> file
 ```
 
 - Redirect `stdout` and `stderr` to append to a file:
 
 ```bash
-&>> file
+[user@localhost ~]$ echo "hello" &>> file
 ```
 
 A common usecase of redirection of `stderr` is to discard error messages:
 
 ```bash
-find . -name 'file' 2> /dev/null
+[user@localhost ~]$ find . -name 'file' 2> /dev/null
 ```
 
 ## Pipeline
@@ -58,21 +58,24 @@ find . -name 'file' 2> /dev/null
 A pipeline is a sequence of one or more commands that are separated by the vertical bar character (`|`). A pipeline connects `stdout` of the first command to `stdin` of the next command:
 
 ```bash
-ls | wc -l
+[user@localhost ~]$ ls | wc -l
+3
 ```
 
 ## Pipeline with redirection
 
 ```bash
-echo "hello" > file.txt | wc -c
+[user@localhost ~]$ echo "hello" > file.txt | wc -c
+0
 ```
 
-This example would print `0`. This is because the shell sets up the pipeline first and then redirects the output, which means that the output of `echo` goes into `file.txt` and not to `wc`.
+It prints `0` because the shell sets up the pipeline first and then redirects the output, which means that the output of `echo` goes into `file.txt` and not to `wc`.
 
 To solve this problem you can use `tee`, which copies its `stdin` to its `stdout` and also redirects its `stdout` to the given argument:
 
 ```bash
-echo "hello" | tee file.txt | wc -c
+[user@localhost ~]$ echo "hello" | tee file.txt | wc -c
+6
 ```
 
 This would print `hello` into `file.txt`, but also print in `stdout` the wordcount, which is `6`.
@@ -82,5 +85,5 @@ This would print `hello` into `file.txt`, but also print in `stdout` the wordcou
 If you want to pass `stderr` as input for the next command, `&>` and `&>>` cannot be used. Use `2>&1` and `2>>&1` instead:
 
 ```bash
-find . -name 'file' 2>&1 | less
+[user@localhost ~]$ find . -name 'file' 2>&1 | less
 ```

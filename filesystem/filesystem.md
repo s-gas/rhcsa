@@ -33,7 +33,8 @@ Inodes do not keep track of the name of the file.
 To view the inode of a file:
 
 ```bash
-ls -li <filename>
+[user@localhost ~]$ ls -li file.txt 
+25515864 -rw-r--r--. 2 user user 0 Sep 22 21:42 file.txt
 ```
 
 Inodes are file system specific. For example, the `xfs` file system (default for RHEL) generates inodes of 512 bytes.

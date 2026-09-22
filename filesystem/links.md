@@ -13,14 +13,16 @@ You can view how many hard links a file has with `ls -l`, the second column is t
 You can create a hard link with the `ln` command:
 
 ```bash
-ln <file> <link>
+[user@localhost ~]$ ln file.txt link
 ```
 
 These two files will have the same inode. You can check that with `ls -li`:
 
 ```bash
-111641343 -rw-r--r--  2 user  group  0 Sep 22 17:57 file
-111641343 -rw-r--r--  2 user  group  0 Sep 22 17:57 link
+[user@localhost ~]$ ls -li
+total 0
+25515864 -rw-r--r--. 2 user user 0 Sep 22 21:42 file.txt
+25515864 -rw-r--r--. 2 user user 0 Sep 22 21:42 link
 ```
 
 ### Limitations of hard links
@@ -35,7 +37,7 @@ A symbolic link is a file that points to an existing file or directory.
 You can create a symlink with `ln -s`:
 
 ```bash
-ln -s <file> <symlink>
+[user@localhost ~]$ ln -s file.txt symlink
 ```
 
 The two files will not have the same inode.
@@ -43,7 +45,11 @@ The two files will not have the same inode.
 A symbolic link is not a regular file, this is confirmed by the fact that `ls -l` would display somethink like:
 
 ```bash
-lrwxr-xr-x  1 user  group  4 Sep 22 15:37 link -> file
+[user@localhost ~]$ ls -li
+total 0
+25515864 -rw-r--r--. 2 user user 0 Sep 22 21:42 file.txt
+25515864 -rw-r--r--. 2 user user 0 Sep 22 21:42 link
+25540504 lrwxrwxrwx. 1 user user 8 Sep 22 21:44 symlink -> file.txt
 ```
 
 ### Limitations of soft links
