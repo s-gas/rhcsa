@@ -6,6 +6,7 @@ Files on a Linux system are organized into a single inverted tree of directories
 
 | location | files  |
 |----------|----------|
+| `/`      | root of the hierarchy |
 | `/boot`  | boot process |
 | `/dev`   | devices |
 | `/etc`   | system configuration |
