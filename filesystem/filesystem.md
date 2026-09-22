@@ -1,5 +1,7 @@
 # File System
 
+Files on a Linux system are organized into a single inverted tree of directories.
+
 ## Hierarchy
 
 | location | files  |
