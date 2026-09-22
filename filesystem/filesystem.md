@@ -19,7 +19,7 @@ Files on a Linux system are organized into a single inverted tree of directories
 
 ## Files
 
-Files are identified by their *inode* (index node), which has information about:
+Files are identified by their **inode** (index node), which has information about:
 - file type
 - ownership
 - permissions
@@ -56,7 +56,12 @@ You can create a hard link with the `ln` command:
 ln <file> <link>
 ```
 
-These two files will have the same inode. You can check that with `ls -li`.
+These two files will have the same inode. You can check that with `ls -li`:
+
+```bash
+111641343 -rw-r--r--  2 user  group  0 Sep 22 17:57 file
+111641343 -rw-r--r--  2 user  group  0 Sep 22 17:57 link
+```
 
 #### Limitations of hard links
 
