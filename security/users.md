@@ -78,6 +78,25 @@ Every entry consist of 7 fields separated by a colon:
 - home directory.
 - default shell program.
 
+### Switch user account
+
+```bash
+[user@localhost ~]$ su - user2
+Password:
+[user2@localhost ~]$
+```
+
+If the username is omitted, it switches to `root`:
+
+```bash
+[user@localhost ~]$ su -
+Password:
+[root@localhost ~]$
+```
+
+`su` can be run without the dash (`-`), in which case it will start a **non-login shell** as opposed to a login shell.
+If you need the user's environment variables, always use `su -`.
+
 ## Groups
 
 A group is a collection of users that need to share access to files and other system resources.
