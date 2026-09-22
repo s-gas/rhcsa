@@ -67,7 +67,7 @@ ls | wc -l
 echo "hello" > file.txt | wc -c
 ```
 
-This example would print 0. This is because the shell sets up the pipeline first and then redirects the output, which means that the output of `echo` goes into `file.txt` and not to `wc`.
+This example would print `0`. This is because the shell sets up the pipeline first and then redirects the output, which means that the output of `echo` goes into `file.txt` and not to `wc`.
 
 To solve this problem you can use `tee`, which copies its `stdin` to its `stdout` and also redirects its `stdout` to the given argument:
 
