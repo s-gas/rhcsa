@@ -54,7 +54,7 @@ This means that a user with primary group `user` can access a file owned by the 
 To create a group, use the `groupadd` command:
 
 ```bash
-[root@localhost etc]# groupadd admins
+[root@localhost etc]$ groupadd admins
 ```
 
 ## Modify a group
@@ -64,13 +64,13 @@ To modify a group, use the `groupmod` command. Common usecases are:
 - modify the name of a group:
 
 ```bash
-[root@localhost etc]# groupmod -n new_group_name admins
+[root@localhost etc]$ groupmod -n new_group_name admins
 ```
 
 - modify the GID of a group:
 
 ```bash
-[root@localhost etc]# groupmod -g 1111 new_group_name
+[root@localhost etc]$ groupmod -g 1111 new_group_name
 ```
 
 ## Delete a group
@@ -78,7 +78,7 @@ To modify a group, use the `groupmod` command. Common usecases are:
 To delete a group, use the `groupdel` command:
 
 ```bash
-[root@localhost etc]# groupdel new_group_name
+[root@localhost etc]$ groupdel new_group_name
 ```
 
 You cannot delete a group if it is the primary group of a user!

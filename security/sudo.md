@@ -11,7 +11,7 @@ To get interactive `sudo` access:
 ```bash
 [s-gas@localhost ~]$ sudo -i
 [sudo] password for s-gas: 
-[root@localhost ~]# 
+[root@localhost ~]$ 
 ```
 
 ## Configuration

@@ -106,7 +106,7 @@ The superuser is `root` and it overrides the normal privileges of the file syste
 The file `/etc/login.defs` sets some default options for user accounts, such as the range of valid UID numbers and default password aging rules. The values in this file affect only newly created user accounts. A change to this file does not affect existing users:
 
 ```bash
-[root@localhost etc]# cat /etc/login.defs | grep ^[^#]
+[root@localhost etc]$ cat /etc/login.defs | grep ^[^#]
 MAIL_DIR	        /var/spool/mail
 UMASK             022
 HOME_MODE         0700
@@ -141,7 +141,7 @@ HMAC_CRYPTO_ALGO SHA512
 To create a new user:
 
 ```bash
-[root@localhost etc]# useradd user
+[root@localhost etc]$ useradd user
 ```
 
 This will create a new user named `user`, a home directory with the same name, a primary private group with the same name. The UID will be the first number available above 1000.
@@ -149,7 +149,7 @@ This will create a new user named `user`, a home directory with the same name, a
 The user cannot login until a password is set with `passwd`:
 
 ```bash
-[root@localhost etc]# passwd user
+[root@localhost etc]$ passwd user
 New password: 
 BAD PASSWORD: The password is shorter than 8 characters
 Retype new password: 
@@ -163,7 +163,7 @@ You can modify an existing user with `usermod`. Some common examples are:
 - change the user name:
 
 ```bash
-[root@localhost etc]# usermod -l new_name user
+[root@localhost etc]$ usermod -l new_name user
 ```
 
 This will rename `user` to `new_name`. The user's home directory or mail spool should probably be renamed manually to reflect the new login name.
@@ -171,7 +171,7 @@ This will rename `user` to `new_name`. The user's home directory or mail spool s
 - add a supplementary group to a user:
 
 ```bash
-[root@localhost etc]# usermod -aG wheel user
+[root@localhost etc]$ usermod -aG wheel user
 ```
 
 This will add the group `wheel` to the supplementary group list of `user`.
@@ -179,13 +179,13 @@ This will add the group `wheel` to the supplementary group list of `user`.
 - modify a user's primary group:
 
 ```bash
-[root@localhost etc]# usermod -g admin user
+[root@localhost etc]$ usermod -g admin user
 ```
 
 - lock a user's password:
 
 ```bash
-[root@localhost etc]# usermod -L user
+[root@localhost etc]$ usermod -L user
 ```
 
 This will add a `!` in front of the encrypted password, effectively disabling the password.
@@ -193,13 +193,13 @@ This will add a `!` in front of the encrypted password, effectively disabling th
 The same can be achieved with `passwd -L`:
 
 ```bash
-[root@localhost etc]# passwd -L user
+[root@localhost etc]$ passwd -L user
 ```
 
 - unlock a user's password:
 
 ```bash
-[root@localhost etc]# usermod -U user
+[root@localhost etc]$ usermod -U user
 ```
 
 ## Delete a user account:
@@ -207,7 +207,7 @@ The same can be achieved with `passwd -L`:
 To delete a user:
 
 ```bash
-[root@localhost etc]# userdel user
+[root@localhost etc]$ userdel user
 ```
 
 This will not delete its home directory and the mail spool!
@@ -215,7 +215,7 @@ This will not delete its home directory and the mail spool!
 To delete a user and its home directory and its mail spool:
 
 ```bash
-[root@localhost etc]# userdel -r user
+[root@localhost etc]$ userdel -r user
 ```
 
 > When you remove a user without the `-r` option, an unassigned UID owns the files of the deleted user. If you create a new user and that user is assigned that UID, then the new account owns those files, which is a security risk.
@@ -223,9 +223,9 @@ To delete a user and its home directory and its mail spool:
 Typically, organization security policies disallow deleting user accounts, and instead lock them from being used, to avoid this scenario:
 
 ```bash
-[root@localhost etc]# usermod -L user
-[root@localhost etc]# chage -E 0 user
-[root@localhost etc]# usermod -s /sbin/nologin user
+[root@localhost etc]$ usermod -L user
+[root@localhost etc]$ chage -E 0 user
+[root@localhost etc]$ usermod -s /sbin/nologin user
 ```
 
 The `chage -E 0 user` command sets the expiration date of that account to day 0 from `epoch` (1970-01-01).
@@ -238,14 +238,14 @@ Setting the default shell to `/sbin/nologin` prevents interactive use of the sys
 The cryptographically hashed passwords are stored in `/etc/shadow` file, which only the root user can read.
 
 ```bash
-[root@localhost ~]# ls -l /etc/shadow
+[root@localhost ~]$ ls -l /etc/shadow
 ----------. 1 root root 690 Sep 23 05:12 /etc/shadow
 ```
 
 The entries of `/etc/shadow` contain 9 fields separated by colons:
 
 ```bash
-[root@localhost ~]# cat /etc/shadow
+[root@localhost ~]$ cat /etc/shadow
 root:!::0:99999:7:::
 user:$y$j9T$dFrzz1pP9zcpQWPSLph8S/$wP6kMnCeo.p6wcRm/cBm.FLDhb51W21JfpoNnJsJDq/:20719:0:99999:7:::
 ```
@@ -264,7 +264,7 @@ Fields:
 The same information can be retrieved with `chage -l`:
 
 ```bash
-[root@localhost ~]# chage -l user
+[root@localhost ~]$ chage -l user
 Last password change			                        : Sep 23, 2026
 Password expires					                        : never
 Password inactive					                        : never
@@ -289,7 +289,7 @@ Examples:
 - modify the account to expire 30 days from now:
 
 ```bash
-[root@localhost ~]# chage -E $(date -d +30days +%F) user
+[root@localhost ~]$ chage -E $(date -d +30days +%F) user
 ```
 
 In this example, `date -d` is used to calculate the date 30 days from now.
@@ -297,13 +297,13 @@ In this example, `date -d` is used to calculate the date 30 days from now.
 - set the maximum number of days during which a password is valid to 10:
 
 ```bash
-[root@localhost ~]# chage -M 10 user
+[root@localhost ~]$ chage -M 10 user
 ```
 
 - verify the policy of a user:
 
 ```bash
-[root@localhost ~]# chage -l user
+[root@localhost ~]$ chage -l user
 Last password change					                    : Sep 23, 2026
 Password expires					                        : Oct 03, 2026
 Password inactive				                         	: never
@@ -316,8 +316,8 @@ Number of days of warning before password expires	: 7
 - force the user to change their password at next login:
 
 ```bash
-[root@localhost ~]# chage -d 0 user
-[root@localhost ~]# chage -l user
+[root@localhost ~]$ chage -d 0 user
+[root@localhost ~]$ chage -l user
 Last password change                    					: password must be changed
 Password expires                        					: password must be changed
 Password inactive				                        	: password must be changed

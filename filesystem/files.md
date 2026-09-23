@@ -108,33 +108,33 @@ Only `root` can change the user owner of a file. The group owner can be changed 
 To change the user owner:
 
 ```bash
-[root@localhost user]# ls -l file
+[root@localhost user]$ ls -l file
 -rw-r--r--. 1 user user 0 Sep 23 06:45 file
-[root@localhost user]# chown root file
-[root@localhost user]# ls -l file
+[root@localhost user]$ chown root file
+[root@localhost user]$ ls -l file
 -rw-r--r--. 1 root user 0 Sep 23 06:45 file
 ```
 
 To change the group owner:
 
 ```bash
-[root@localhost user]# chown :root file
-[root@localhost user]# ls -l file
+[root@localhost user]$ chown :root file
+[root@localhost user]$ ls -l file
 -rw-r--r--. 1 root root 0 Sep 23 06:45 file
 ```
 
 Alternatively, you can change the group owner also with `chgrp`:
 
 ```bash
-[root@localhost user]# chgrp root file
-[root@localhost user]# ls -l file
+[root@localhost user]$ chgrp root file
+[root@localhost user]$ ls -l file
 -rw-r--r--. 1 user root 0 Sep 23 06:45 file
 ```
 
 To change both the user owner and the group owner:
 
 ```bash
-[root@localhost user]# chown user:user file
-[root@localhost user]# ls -l file
+[root@localhost user]$ chown user:user file
+[root@localhost user]$ ls -l file
 -rw-r--r--. 1 user user 0 Sep 23 06:45 file
 ```
