@@ -42,19 +42,25 @@ Inodes are file system specific. For example, the `xfs` file system (default for
 ## `/etc`: useful files and directories
 
 - `/etc/profile` and `/etc/profile.d/`
+
   Variables available to all users
 
 - `/etc/sudoers` and `/etc/sudoers.d/`
+
   Configuration for `sudo` access
 
 - `/etc/passwd`
+
   Information about users
 
 - `/etc/group`
+
   Information about groups
 
 - `/etc/shadow`
+
   Information about passwords
 
 - `/etc/login.defs`
+
   Configuration for users and groups
