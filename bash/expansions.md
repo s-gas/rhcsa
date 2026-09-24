@@ -7,7 +7,7 @@ It generates strings of characters.
 Brace expansion with comma-separated list of strings:
 
 ```bash
-echo letter{A,B,C,D,E}.txt
+[user@localhost ~]$ echo letter{A,B,C,D,E}.txt
 letterA.txt letterB.txt letterC.txt letterD.txt letterE.txt
 ```
 

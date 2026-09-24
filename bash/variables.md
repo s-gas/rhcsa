@@ -89,5 +89,5 @@ An alias is just another name for a command:
 To remove an alias:
 
 ```bash
-unalias ll
+[user@localhost ~]$ unalias ll
 ```
