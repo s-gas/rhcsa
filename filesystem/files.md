@@ -138,3 +138,110 @@ To change both the user owner and the group owner:
 [root@localhost user]$ ls -l file
 -rw-r--r--. 1 user user 0 Sep 23 06:45 file
 ```
+
+### Special permissions
+
+| Permission       | Effect on directories                                 | Effect on files                       |
+|------------------|-------------------------------------------------------|---------------------------------------|
+| setuid (`u+s`)   | No effect                                             | Files get executed as the user owner  |
+| setgid (`g+s`)   | Children inherit the directory's group owner          | Files get executed as the group owner |
+| sticky (`o+t`)   | Only the owner of the file can modify/delete the file | No effect                             |
+
+Setting special permissions with the symbolic method:
+
+- add setuid permission:
+
+```bash
+[user@localhost ~]$ chmod u+s script.sh 
+[user@localhost ~]$ ls -l script.sh 
+-rwsr-xr-x. 1 user user 0 Sep 23 16:34 script.sh
+```
+
+- add setgid permission:
+
+```bash
+[user@localhost ~]$ chmod g+s script.sh 
+[user@localhost ~]$ ls -l script.sh
+[user@localhost ~]$ ls -l script.sh 
+-rwsr-sr-x. 1 user user 0 Sep 23 16:34 script.sh
+```
+
+- add sticky permission:
+
+```bash
+[user@localhost ~]$ chmod o+t shared-dir/
+[user@localhost ~]$ ls -ld shared-dir/
+drwxr-xr-t. 2 user user 6 Sep 23 16:37 shared-dir/
+```
+
+Setting special permissions with the octal method:
+
+- add setuid permission:
+
+```bash
+[user@localhost ~]$ chmod 4777 file
+[user@localhost ~]$ ls -l file 
+-rwsrwxrwx. 1 user user 0 Sep 23 16:40 file
+```
+
+- add setgid permission:
+
+```bash
+[user@localhost ~]$ chmod 2770 shared-dir/
+[user@localhost ~]$ ls -ld shared-dir/
+drwxrws---. 2 user user 6 Sep 23 16:37 shared-dir/
+```
+
+- add sticky permission:
+
+```bash
+[user@localhost ~]$ chmod 1770 shared-dir/
+[user@localhost ~]$ ls -ld shared-dir/
+drwxrwx--T. 2 user user 6 Sep 23 16:37 shared-dir/
+```
+
+- remove special permissions:
+
+```bash
+[user@localhost ~]$ chmod 00770 shared-dir/
+[user@localhost ~]$ ls -ld shared-dir/
+drwxrwx---. 2 user user 6 Sep 23 16:37 shared-dir/
+```
+
+### Default permissions
+
+By default files get created with these permissions:
+- regular files: `0666`
+- directories: `0777`
+
+These values are restricted by the `umask`, which by default is `0022`, which means that a file would be created with `0644` and a directory with `0755`:
+
+```bash
+[user@localhost ~]$ umask
+0022
+[user@localhost ~]$ touch file
+[user@localhost ~]$ mkdir dir
+[user@localhost ~]$ ls -l
+total 0
+drwxr-xr-x. 2 user user 6 Sep 23 17:06 dir
+-rw-r--r--. 1 user user 0 Sep 23 17:06 file
+```
+
+The system default value for the umask is defined in `/etc/login.defs`:
+
+```bash
+[root@localhost ~]$ cat /etc/login.defs | grep '^UMASK'
+UMASK		022
+```
+
+It can be overwritten for a specific user in their `~/.bashrc`:
+
+```bash
+[user@localhost ~]$ echo "umask 0077" >> ~/.bashrc
+[user@localhost ~]$ source ~/.bashrc
+[user@localhost ~]$ touch new_file
+[user@localhost ~]$ ls -l new_file 
+-rw-------. 1 user user 0 Sep 23 17:18 new_file
+[user@localhost ~]$ umask
+0077
+```
