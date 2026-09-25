@@ -67,3 +67,30 @@ Each CPU (or CPU core) can work on one process at a time. This means that not al
 | Sleeping   | `S`, `D`, `K`, `I` |
 | Stopped    | `T`                |
 | Zombie     | `Z`, `X`           |
+
+You can view the state of a process with `top` (`S` column):
+
+```bash
+[s-gas@localhost ~]$ top -b | head -10
+top - 00:28:04 up 1 day,  2:48,  1 user,  load average: 0.01, 0.05, 0.00
+Tasks: 107 total,   1 running, 106 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us, 16.7 sy,  0.0 ni, 83.3 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   1568.4 total,    829.5 free,    348.6 used,    481.1 buff/cache     
+MiB Swap:   2048.0 total,   2048.0 free,      0.0 used.   1219.9 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   6325 s-gas     20   0   17608   7388   5204 S  10.0   0.5   0:04.31 sshd-se+
+   6537 s-gas     20   0  231828   4648   2644 R  10.0   0.3   0:00.01 top
+      1 root      20   0   45012  35932  10040 S   0.0   2.2   0:03.32 systemd
+```
+
+You can also use `ps` (`STAT` column):
+
+```bash
+[s-gas@localhost ~]$ ps aux | head -5
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  2.2  45012 35932 ?        Ss   Sep22   0:03 /usr/lib/systemd/systemd --switched-root --system --deserialize=50
+root           2  0.0  0.0      0     0 ?        S    Sep22   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        S    Sep22   0:00 [pool_workqueue_release]
+root           4  0.0  0.0      0     0 ?        I<   Sep22   0:00 [kworker/R-rcu_gp]
+```
