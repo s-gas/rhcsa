@@ -68,6 +68,16 @@ Or also with the signal name:
 [1]+  Killed                  sleep 1000
 ```
 
+And also with the job number:
+
+```bash
+[user@localhost ~]$ sleep 1000 &
+[1] 7477
+[user@localhost ~]$ kill %1
+[user@localhost ~]$ jobs
+[1]+  Terminated              sleep 1000
+```
+
 Another command to send signals is `pkill`, which sends signals to the processes that match its criteria.
 
 The default criteria is the command name:
@@ -133,7 +143,7 @@ s-gas              02:18    2:39m  0.00s  0.01s sshd-session: s-gas [priv]
 user     pts/3     02:49   57.00s  0.00s   ?    -bash
 ```
 
-Knowing the terminal of a user can be useful to kill all processes related to the terminal session:
+Knowing the terminal of a user can be useful to kill all processes related to the terminal session (`pkill -t`):
 
 ```bash
 [root@localhost ~]$ pgrep -l -u user
