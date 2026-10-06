@@ -42,3 +42,7 @@ Files on a Linux system are organized into a single inverted tree of directories
 - `/etc/login.defs`
 
   Configuration for users and groups
+
+- `/etc/ssh/`
+
+  Configuration for SSH
