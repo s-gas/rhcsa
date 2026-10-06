@@ -7,7 +7,7 @@ A signal is an asynchronous notification to a process.
 | Signal | Name       | Definition                                                                        |
 |--------|------------|-----------------------------------------------------------------------------------|
 | `1`    | `SIGHUP`   | `Hangup`: reports termination of the terminal. Also requests configuration reload |
-| `2`    | `SIGINT`  | `Keyboard interrupt`: causes program termination via the keyboard (`Ctrl-C`)      |
+| `2`    | `SIGINT`   | `Keyboard interrupt`: causes program termination via the keyboard (`Ctrl-C`)      |
 | `3`    | `SIGQUIT`  | `Keyboard quit`: causes program termination and adds process dump via (`Ctrl-\`)  |
 | `9`    | `SIGKILL`  | `Kill`: causes abrupt program termination.(unblockable)                           |
 | `15`   | `SIGTERM`  | `Terminate`: causes program termination. Default signal for program termination   |
