@@ -219,3 +219,35 @@ Last login: Fri Sep 25 11:48:56 2026 from 10.0.2.2
 ```
 
 This configuration lets me run `ssh rocky` without having to specify all the parameters (hostname, user, port, key).
+
+## SSH Server Configuration
+
+The SSH service is provided by the `sshd` daemon. You can configure the server by editing `/etc/ssh/sshd_config` or by adding a `.conf` file into the drop-in directory `/etc/ssh/sshd_config.d/`.
+
+Common good practices are:
+- prohibit `root` access:
+
+```bash
+[root@localhost ssh_config.d]$ echo "PermitRootLogin no" > /etc/ssh/sshd_config.d/00-prohibit-root.conf
+[root@localhost ssh_config.d]$ systemctl reload-or-restart sshd
+```
+
+> Remember to reload the service when modifying the configuration files!
+
+- disable password-based authentication:
+
+```bash
+[root@localhost ssh]$ echo "PasswordAuthentication no" > /etc/ssh/sshd_config.d/01-no-password.conf
+[root@localhost ssh]$ systemctl reload-or-restart sshd
+```
+
+Files should be named with a numer prefix, because files are included in alphabetical order and the first valued obtained wins:
+
+```bash
+[root@localhost sshd_config.d]$ echo "PasswordAuthentication no" > /etc/ssh/sshd_config.d/00-no-pass.conf
+[root@localhost sshd_config.d]$ echo "PasswordAuthentication yes" > /etc/ssh/sshd_config.d/01-no-pass.conf
+[root@localhost sshd_config.d]$ sshd -T | grep -i 'PasswordAuthentication'
+passwordauthentication no
+```
+
+This example shows that the configuration of `sshd` does not allow password authentication.
