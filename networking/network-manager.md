@@ -55,3 +55,9 @@ method=auto
 
 [proxy]
 ```
+
+If you modify the files manually, remember to reload the connection with `nmcli con reload`:
+
+```bash
+[root@localhost ~]$ nmcli con reload
+```

@@ -207,7 +207,7 @@ SSH provides 3 levels of verbosity: `-v`, `-vv`, `-vvv`.
 To avoid having to specify command parameters every time, you can create a `~/.ssh/config` file with the wished configuration:
 
 ```bash
-❯ cat config 
+❯ cat ~/.ssh/config 
 host rocky
 	HostName	 	localhost
 	User		 	user

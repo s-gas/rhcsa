@@ -51,6 +51,18 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Manual configuration for hostnames
 
+- `/etc/hostname`
+
+  Configuration for the machine's static hostname
+
 - `/etc/NetworkManager/system-connection`
 
   Network configuration files
+
+- `/etc/nsswitch.conf`
+
+  Name Service Switch configuration file (where and in what order to look up admin and network databases)
+
+- `/etc/resolv.conf`
+
+  Configuration for DNS server
