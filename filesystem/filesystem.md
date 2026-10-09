@@ -46,3 +46,11 @@ Files on a Linux system are organized into a single inverted tree of directories
 - `/etc/ssh/`
 
   Configuration for SSH
+
+- `/etc/hosts`
+
+  Manual configuration for hostnames
+
+- `/etc/NetworkManager/system-connection`
+
+  Network configuration files
