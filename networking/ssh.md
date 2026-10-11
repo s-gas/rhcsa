@@ -250,4 +250,4 @@ Files should be named with a numer prefix, because files are included in alphabe
 passwordauthentication no
 ```
 
-This example shows that the configuration of `sshd` does not allow password authentication.
+This example shows that the configuration of `sshd` does not allow password authentication. In this case it is not necessary to manually `systemctl reload sshd`, since `sshd -T` already does that.
