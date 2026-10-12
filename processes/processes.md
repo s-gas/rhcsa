@@ -18,6 +18,7 @@ The **environment** of a process consists of:
 Every process has a process ID (`PID`) and can create a child process with the `fork` system call. The main process is `systemd` which its PID is 1.
 
 ```bash
+[user@rocky ~]$ pstree -p
 systemd(1)─┬─NetworkManager(782)─┬─{NetworkManager}(783)
            │                     ├─{NetworkManager}(784)
            │                     └─{NetworkManager}(785)

@@ -124,7 +124,7 @@ You can also loop with the classic for loop:
 9
 ```
 
-> The double parenthesis are needed for performing arithmetics.
+> The double parenthesis are needed for performing arithmetics in bash.
 
 ## Exit codes
 
