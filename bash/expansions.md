@@ -71,3 +71,24 @@ It expands a pattern into a list of files.
 | `?`         | Any single character |
 | `[abc..]`   | Any character in the enclosed class |
 | `[!abc..]`  | Any character NOT in the class |
+
+## Suppress Expansion
+
+To suppress any kind of expansion, wrap it in single quotes:
+
+```bash
+[user@rocky ~]$ echo 'file{1..3}'
+file{1..3}
+```
+
+To suppress expansions but allow only command substition and variable substitution, wrap it in double quotes:
+
+```bash
+[user@rocky ~]$ cd ~
+[user@rocky ~]$ cd "~"
+-bash: cd: ~: No such file or directory
+[user@rocky ~]$ echo "$PATH"
+/home/user/.local/bin:/home/user/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+[user@rocky ~]$ echo "$(date +%F)"
+2026-10-12
+```

@@ -245,3 +245,86 @@ It can be overwritten for a specific user in their `~/.bashrc`:
 [user@localhost ~]$ umask
 0077
 ```
+
+## How to find files
+
+The `find` command locates files by searching in the filesystem with the user account that executed the command. This means that the user needs to have read (`r`) and execute (`x`) permissions on the directory.
+
+### Useful `find` commands
+
+To find a file by name, use `find -name`:
+
+```bash
+[user@rocky ~]$ find . -name 'file'
+./dir/file
+```
+
+You can also use wildcards, but make sure to wrap the filename in quotes to prevent the shell to interpret it:
+
+```bash
+[user@rocky ~]$ find . -name 'f*'
+./dir/file
+```
+
+To find a file by case-insensitive name, use `find -iname`:
+
+```bash
+[user@rocky ~]$ find ~ -iname 'FILE'
+/home/user/dir/file
+```
+
+To find by owning user, use `find -user`:
+
+```bash
+[user@rocky ~]$ find ~ -user 'user' -iname 'F*'
+/home/user/dir/file
+```
+
+To find by file permissions, use `find -perm`:
+
+```bash
+[user@rocky ~]$ find ~/dir/ -perm 644
+/home/user/dir/file
+```
+
+To find by type, use `find -type`:
+
+```bash
+[user@rocky ~]$ find ~/dir/ -type f
+/home/user/dir/file
+```
+
+```bash
+[user@rocky ~]$ find /dev/ -type b
+/dev/sda
+/dev/sda1
+/dev/sda2
+/dev/sda3
+/dev/sr0
+/dev/dm-0
+/dev/dm-1
+```
+
+To find by size, use `find -size`:
+
+```bash
+[user@rocky ~]$ find . -size +150c -size -200c
+./dir/file
+```
+
+Here the `c` after the numbers indicates bytes, because by default it uses `b` (512-bytes blocks).
+
+To find by modification time (in minutes), use `find -mmin`:
+
+```bash
+[user@rocky ~]$ find . -mmin +2 -mmin -10
+./dir/file
+```
+
+To find files and to execute a command, use `find -exec {} \;`:
+
+```bash
+[user@rocky ~]$ find ~ -iname 'file' -exec mv {} new \;
+[user@rocky ~]$ find ~ -name 'new'
+/home/user/new
+```
