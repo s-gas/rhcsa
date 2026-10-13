@@ -178,6 +178,24 @@ The `test` command can be used only with its command syntax:
 
 The space between the brackets are **mandatory** because the test parser tracks the spaces to split the elements!
 
+A command use case is to check if a file exists or not:
+
+```bash
+[user@rocky ~]$ bat script.sh 
+───────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: script.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ #!/bin/bash
+   2   │ 
+   3   │ if ! [[ -f /home/user/file.txt ]]; then
+   4   │     echo "/home/user/file.txt does not exist"
+   5   │     echo "creating /home/user/file.txt"
+   6   │     touch /home/user/file.txt
+   7   │ else
+   8   │     echo "/home/user/file.txt already exists"
+   9   │ fi
+```
+
 ## If/Then Conditional
 
 Syntax:

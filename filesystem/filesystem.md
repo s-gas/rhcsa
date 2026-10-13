@@ -72,6 +72,20 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Configuration for package repositories (`.repo` files)
 
+- `/etc/crontab` and `/etc/cron.d/`
+
+  Configuration for cron jobs
+
+- `/etc/cron.hourly/`, `/etc/cron.daily/`, `/etc/cron.weekly/`, `/etc/cron.monthly/`
+
+  Directories contains scripts to be executed in that interval
+
+- `/etc/anacrontab`
+
+  Configuration for anacron
+
+  
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.

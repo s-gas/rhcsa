@@ -52,6 +52,7 @@ A unit has:
 Some important unit types are:
 - `service`: represent services
 - `socket`: represent IPC (inter-process communication) sockets
+- `timer`: represent units that activate other units on a timer
 
 ## Interact with systemd
 
