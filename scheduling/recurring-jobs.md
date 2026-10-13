@@ -114,3 +114,58 @@ Also, as you can see from `/etc/anacrontab`, the syntax is different from cron j
 - delay in minutes: time that `crond` needs to wait before running the job
 - job-identifier: the name given to the log file stored in `/var/spool/anacron`
 - command: command to run
+
+## Systemd timer
+
+The `systemd` timer units activate other units based on a timer:
+
+```bash
+[root@rocky /]$ systemctl list-units --type=timer
+  UNIT                         LOAD   ACTIVE SUB     DESCRIPTION                                 
+  dnf-makecache.timer          loaded active waiting dnf makecache --timer
+  fstrim.timer                 loaded active waiting Discard unused filesystem blocks once a week
+  fwupd-refresh.timer          loaded active waiting Refresh fwupd metadata regularly
+  logrotate.timer              loaded active waiting Daily rotation of log files
+  systemd-tmpfiles-clean.timer loaded active waiting Daily Cleanup of Temporary Directories
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+5 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+[root@rocky /]$ systemctl status fstrim.timer
+● fstrim.timer - Discard unused filesystem blocks once a week
+     Loaded: loaded (/usr/lib/systemd/system/fstrim.timer; enabled; preset: enabled)
+     Active: active (waiting) since Tue 2026-10-13 14:44:46 CEST; 5h 15min ago
+ Invocation: 36023f6d636c4622a81ddee7204884aa
+    Trigger: Mon 2026-10-19 00:06:58 CEST; 5 days left
+   Triggers: ● fstrim.service
+       Docs: man:fstrim
+
+Oct 13 14:44:46 rocky systemd[1]: Started fstrim.timer - Discard unused filesystem blocks once a week.
+[root@rocky /]$ cat /usr/lib/systemd/system/fstrim.timer 
+[Unit]
+Description=Discard unused filesystem blocks once a week
+Documentation=man:fstrim
+ConditionVirtualization=!container
+ConditionPathExists=!/etc/initrd-release
+
+[Timer]
+OnCalendar=weekly
+AccuracySec=1h
+Persistent=true
+RandomizedDelaySec=100min
+
+[Install]
+WantedBy=timers.target
+```
+
+The `OnCalendar` field indicates that the service unit will be run weekly.
+
+As explained in the file about `systemd`, configuration files should not modified. If you want to apply changes, create a copy in `/etc/systemd/system/` and then modify it. Then, if you want to activate the timer unit, reload `systemd` and enable the timer unit:
+
+```bash
+[root@rocky /]$ systemctl daemon-reload
+[root@rocky /]$ systemctl enable --now fstrim.timer
+```

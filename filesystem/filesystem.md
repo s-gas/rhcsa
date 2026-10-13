@@ -84,6 +84,10 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Configuration for anacron
 
+- `/etc/systemd/system/`
+
+  Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`
+
   
 
 ## Local file system

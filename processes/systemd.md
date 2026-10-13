@@ -54,6 +54,27 @@ Some important unit types are:
 - `socket`: represent IPC (inter-process communication) sockets
 - `timer`: represent units that activate other units on a timer
 
+## Configuration files
+
+`systemd` unit configuration files are `INI` files:
+
+```bash
+[root@rocky /]$ cat /usr/lib/systemd/system/atd.service 
+[Unit]
+Description=Deferred execution scheduler
+Documentation=man:atd(8)
+After=syslog.target systemd-user-sessions.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/atd
+ExecStart=/usr/sbin/atd -f $OPTS
+IgnoreSIGPIPE=no
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ## Interact with systemd
 
 To interact with `systemd` you can use the `systemctl` command
@@ -202,6 +223,9 @@ Sep 25 05:31:36 localhost.localdomain sshd-session[10181]: Accepted password for
 Sep 25 05:31:36 localhost.localdomain sshd-session[10181]: pam_unix(sshd:session): session opened for user s-gas(uid=1000) by s-gas(uid=0)
 ```
 
+Among other informations, `systemctl status` also show the path of the service's configuration file: `/usr/lib/systemd/system/sshd.service`. Never modify files in `/usr/lib/systemd/system/`, because the `systemd` unit will override the changes. If you want to modify the configuration of a unit, create a copy in `/etc/systemd/system/` and then modify it. You can also create drop-in directories! After changing the configuration remember to reload the service with `systemctl reload`.
+
+
 ### Start and stop services
 
 To start a service is `systemctl start`:
@@ -288,6 +312,12 @@ If you don't know if a service has the reload option, use `systemctl reload-or-r
 [root@localhost ~]$ systemctl reload-or-restart docker
 [root@localhost ~]$ systemctl status docker | grep 'Main PID'
    Main PID: 843 (dockerd)
+```
+
+To reload `systemd` itself, run `systemd daemon-reload`:
+
+```bash
+[root@rocky /]$ systemctl daemon-reload
 ```
 
 ### List unit dependencies
