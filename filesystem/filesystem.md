@@ -88,6 +88,14 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`
 
+- `/etc/tmpfiles.d/`
+
+  Drop-in directory containing custom configuration for `systemd-tmpfiles`. It has priority over `/usr/lib/tmpfiles.d/`
+
+- `/etc/rsyslog.conf` and `/etc/rsyslog.d/`
+
+  Configuration for the `rsyslog` service
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
