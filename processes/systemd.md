@@ -75,6 +75,32 @@ KillMode=process
 WantedBy=multi-user.target
 ```
 
+These configuration files can be in:
+- `/usr/lib/systemd/system/`: default configuration
+- `/etc/systemd/system/`: custom configuration
+
+If the same filename exists in both directories, the custom configuration (`/etc/systemd/system/`) overrides the default one (`/usr/lib/systemd/system`).
+
+To view the configuration of a unit you can use `systemctl cat`:
+
+```bash
+[root@rocky /]$ systemctl cat atd.service
+# /usr/lib/systemd/system/atd.service
+[Unit]
+Description=Deferred execution scheduler
+Documentation=man:atd(8)
+After=syslog.target systemd-user-sessions.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/atd
+ExecStart=/usr/sbin/atd -f $OPTS
+IgnoreSIGPIPE=no
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ## Interact with systemd
 
 To interact with `systemd` you can use the `systemctl` command

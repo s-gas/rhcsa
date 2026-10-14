@@ -88,8 +88,6 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`
 
-  
-
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
