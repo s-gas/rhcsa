@@ -51,6 +51,14 @@ From the example you can see that the last time that the `messages` log have bee
 
 Most log files rotate weekly, a scheduled jobs runs `logrotate` daily to see if any logs need rotation.
 
+The configuration file for logrotate is `/etc/logrotate.conf`:
+
+```bash
+[root@rocky /]$ cat /etc/logrotate.conf  | grep -A1 '# rotate log files weekly'
+# rotate log files weekly
+weekly
+```
+
 ## Syslog entry
 
 ```bash

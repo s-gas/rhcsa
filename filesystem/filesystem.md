@@ -96,6 +96,14 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Configuration for the `rsyslog` service
 
+- `/etc/logrotate.conf` and `/etc/logrotate.d/`
+
+  Configuration for `logrotate`
+
+- `/etc/systemd/journald.conf` and `/etc/systemd/journald.conf.d/`
+
+  Custom configuration for `systemd-journald`. It has priority over `/usr/lib/systemd/journald.conf`
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
