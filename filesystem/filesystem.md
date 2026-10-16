@@ -104,6 +104,10 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Custom configuration for `systemd-journald`. It has priority over `/usr/lib/systemd/journald.conf`
 
+- `/etc/chrony.conf`
+
+  Configuration for the `chronyd` service
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
