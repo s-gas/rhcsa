@@ -56,3 +56,30 @@ pool 2.rocky.pool.ntp.org iburst
 ```
 
 RHEL recommends always using the `iburst` option after the server domain name.
+
+`chronyc` is a client of `chronyd`. For viewing the NTP servers, use `chronyc sources`:
+
+```bash
+[root@rocky ~]$ chronyc sources
+MS Name/IP address         Stratum Poll Reach LastRx Last sample               
+===============================================================================
+^+ radio-sunshine.org            2   6   377    31  -1982us[-2105us] +/-   47ms
+^* time.cloudflare.com           3   6   377    29    -37us[ -160us] +/-   17ms
+^+ funky.f5s.de                  2   6   377    29   +391us[ +267us] +/-   59ms
+^+ ns.gunnarhofmann.de           2   6   377    30  +1364us[+1240us] +/-   56ms
+```
+
+You can also use it to step the clock if you notice that the system time is out of sync. For that use `chronyc makestep`:
+
+```bash
+[root@rocky ~]$ chronyc makestep
+200 OK
+[root@rocky ~]$ timedatectl
+               Local time: Sat 2026-10-17 10:37:49 CEST
+           Universal time: Sat 2026-10-17 08:37:49 UTC
+                 RTC time: Sat 2026-10-17 09:14:37
+                Time zone: Europe/Berlin (CEST, +0200)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+```
