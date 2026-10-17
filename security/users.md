@@ -76,6 +76,15 @@ Every entry consist of 7 fields separated by a colon:
 - home directory.
 - default shell program.
 
+You can also use `getent` to get information about a user:
+
+```bash
+[root@rocky ~]$ getent passwd bob
+bob:x:1003:1003::/home/bob:/sbin/nologin
+```
+
+`getent` gets the entries from administrative databases, in this case the `passwd` database.
+
 ## Switch user account
 
 ```bash
