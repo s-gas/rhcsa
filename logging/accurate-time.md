@@ -32,7 +32,31 @@ System clock synchronized: no
           RTC in local TZ: no
 ```
 
-## `chronyd`
+To figure out the correct time-zone, use `tzselect`:
+
+```bash
+[user@rocky ~]$ man tzselect
+No manual entry for tzselect
+[user@rocky ~]$ tzselect
+Please identify a location so that time zone rules can be set correctly.
+Please select a continent, ocean, "coord", or "TZ".
+1) Africa							     5) Atlantic Ocean							 9) Pacific Ocean
+2) Americas							     6) Australia							10) coord - I want to use geographical coordinates.
+3) Antarctica							     7) Europe								11) TZ - I want to specify the timezone using the Posix TZ format.
+4) Asia								     8) Indian Ocean
+#? 7
+Please select a country whose clocks agree with yours.
+1) Albania		   8) Bulgaria		    15) Germany		      22) Italy			29) Moldova		  36) Portugal		    43) Spain		      50) Åland Islands
+2) Andorra		   9) Croatia		    16) Gibraltar	      23) Jersey		30) Monaco		  37) Romania		    44) Svalbard & Jan Mayen
+3) Austria		  10) Czech Republic	    17) Greece		      24) Latvia		31) Montenegro		  38) Russia		    45) Sweden
+4) Belarus		  11) Denmark		    18) Guernsey	      25) Liechtenstein		32) Netherlands		  39) San Marino	    46) Switzerland
+5) Belgium		  12) Estonia		    19) Hungary		      26) Lithuania		33) North Macedonia	  40) Serbia		    47) Turkey
+6) Bosnia & Herzegovina	  13) Finland		    20) Ireland		      27) Luxembourg		34) Norway		  41) Slovakia		    48) Ukraine
+7) Britain (UK)		  14) France		    21) Isle of Man	      28) Malta			35) Poland		  42) Slovenia		    49) Vatican City
+#? 15
+```
+
+## `chronyd` and `chronyc`
 
 The `chronyd` service synchronizes RTC (Real-Time Clock) with the NTP servers. If no internet is available, it calculates the drift and stores it in the `driftfile` specified in `/etc/chrony.conf`:
 
