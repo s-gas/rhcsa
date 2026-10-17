@@ -390,3 +390,21 @@ To unmask, use `systemctl unmask`:
 [root@localhost ~]$ systemctl unmask crond
 Removed '/etc/systemd/system/crond.service'.
 ```
+
+### Edit units
+
+To modify units, use `systemctl edit`, which will open `vim` and save the written file in a drop-in directory in `/etc/systemd/systemd/` for that unit. In this way `systemd` still uses the default configuration from `/usr/lib/systemd/system/` and adds the rules written in the custom configuration:
+
+```bash
+[root@rocky ~]$ systemctl edit httpd
+Successfully installed edited file '/etc/systemd/system/httpd.service.d/override.conf'.
+[root@rocky ~]$ cat /etc/systemd/system/httpd.service.d/override.conf
+[Service]
+Restart=on-failure
+RestartSec=5
+```
+
+`systemd` provides manuals for every type of unit, in which you can see what variables are valid:
+- `man systemd.unit`
+- `man systemd.service`
+- `man systemd.timer`
