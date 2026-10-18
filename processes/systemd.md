@@ -76,10 +76,12 @@ WantedBy=multi-user.target
 ```
 
 These configuration files can be in:
-- `/usr/lib/systemd/system/`: default configuration
+- `/usr/lib/systemd/system/`: default configuration (given by the vendor)
 - `/etc/systemd/system/`: custom configuration
 
 If the same filename exists in both directories, the custom configuration (`/etc/systemd/system/`) overrides the default one (`/usr/lib/systemd/system`).
+
+Never modify the vendor configuration, the change would get lost as soon as the package gets updated!
 
 To view the configuration of a unit you can use `systemctl cat`:
 
@@ -399,6 +401,22 @@ To modify units, use `systemctl edit`, which will open `vim` and save the writte
 [root@rocky ~]$ systemctl edit httpd
 Successfully installed edited file '/etc/systemd/system/httpd.service.d/override.conf'.
 [root@rocky ~]$ cat /etc/systemd/system/httpd.service.d/override.conf
+[Service]
+Restart=on-failure
+RestartSec=5
+```
+
+With `systemctl cat` you can see that the entries of the drop-in file created with `systemctl edit` were appended to the configuration file:
+
+```bash
+[root@rocky ~]$ systemctl cat httpd.service | tail 
+RestrictSUIDSGID=yes
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/httpd.service.d/override.conf
 [Service]
 Restart=on-failure
 RestartSec=5

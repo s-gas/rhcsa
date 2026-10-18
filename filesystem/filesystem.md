@@ -12,7 +12,7 @@ Files on a Linux system are organized into a single inverted tree of directories
 | `/etc`   | system configuration |
 | `/home`  | home directories |
 | `/root`  | `root` home directory |
-| `/run`   | runtime data |
+| `/run`   | runtime data (volatile: does not persist across reboots) |
 | `/tmp`   | temporary data |
 | `/usr`   | installed software, shared libraries |
 | `/var`   | system persistent dynamic data |
@@ -86,7 +86,7 @@ Files on a Linux system are organized into a single inverted tree of directories
 
 - `/etc/systemd/system/`
 
-  Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`
+  Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`.
 
 - `/etc/tmpfiles.d/`
 

@@ -180,6 +180,8 @@ Here you might need to `reboot` in case `/var/log/journal` does not get populate
 c66ffaecff7e43a3a1c23ff480c4027d
 ```
 
+> Technically changing the `Storage` value to `persistent` wasn't necessary, because when set to `auto`, which is default, it checks if the directory `/var/log/journal/` exists. If yes, `systemd-journald` writes its logs there, otherwise it stores them in the volatile directory.
+
 To limit the output to a specific boot you can use `journalctl -b` with the number of the specific boot:
 
 ```bash

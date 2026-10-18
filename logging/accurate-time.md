@@ -56,6 +56,13 @@ Please select a country whose clocks agree with yours.
 #? 15
 ```
 
+You can find the wanted timezone also through `timedatectl list-timezones`:
+
+```bash
+[root@rocky etc]$ timedatectl list-timezones | grep -i 'berlin'
+Europe/Berlin
+```
+
 ## `chronyd` and `chronyc`
 
 The `chronyd` service synchronizes RTC (Real-Time Clock) with the NTP servers. If no internet is available, it calculates the drift and stores it in the `driftfile` specified in `/etc/chrony.conf`:

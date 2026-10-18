@@ -1,6 +1,6 @@
 # `rsyslog` service
 
-The `rsyslog` service treats the syslog files according to the facility and the priority in the way that it specified in the configuration file `/etc/rsyslog.conf`:
+The `rsyslog` service treats the syslog files according to the facility and the priority in the way that it specified in the configuration file `/etc/rsyslog.conf` and in the drop-in directory `/etc/rsyslog.conf.d/`:
 
 ```bash
 [root@rocky ~]$ cat /etc/rsyslog.conf | grep -A28 '#### RULES ####'

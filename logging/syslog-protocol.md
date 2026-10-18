@@ -1,6 +1,6 @@
 # Syslog Protocol
 
-Syslog files are logging files that follow the syslog protocol.
+Syslog files are logging files that follow the syslog protocol, which is supported both by `systemd-journald` and `rsyslog`.
 
 They are categorized by:
 - facility: the sub-system that generated the log
