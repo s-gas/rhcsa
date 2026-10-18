@@ -1,6 +1,6 @@
 # SSH
 
-SSH stands for Secure Shell and it's a protocol through which systems can communicate in a secure and encrypted way.
+SSH stands for Secure Shell and it's a protocol provided by OpenSSH through which systems can communicate in a secure and encrypted way.
 
 To log into another machine you can use the `ssh` and specify the user and the hostname:
 
