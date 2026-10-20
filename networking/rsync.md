@@ -50,3 +50,5 @@ sent 254 bytes  received 545723 bytes  5459770000 bytes/sec
 total size is 552130  speedup is 1.01
 rsync(85365): warning: child 85366 exited with status 23
 ```
+
+> This example copied the `ssh` directory itself inside `server-ssh` because no trailing slash (`/`) was added to the source directory!

@@ -108,6 +108,10 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Configuration for the `chronyd` service
 
+- `/etc/tuned/tuned-main.conf`
+
+  Main configuration file for the `tuned` daemon
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
