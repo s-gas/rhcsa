@@ -83,6 +83,12 @@ If the same filename exists in both directories, the custom configuration (`/etc
 
 Never modify the vendor configuration, the change would get lost as soon as the package gets updated!
 
+If you decide to modify the configuration files, remember to reload the `systemd` daemon with:
+
+```bash
+[root@localhost ~]# systemctl daemon-reload
+```
+
 To view the configuration of a unit you can use `systemctl cat`:
 
 ```bash

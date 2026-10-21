@@ -95,3 +95,86 @@ root           2  0.0  0.0      0     0 ?        S    Sep22   0:00 [kthreadd]
 root           3  0.0  0.0      0     0 ?        S    Sep22   0:00 [pool_workqueue_release]
 root           4  0.0  0.0      0     0 ?        I<   Sep22   0:00 [kworker/R-rcu_gp]
 ```
+
+You can specify the PID of the process that you want to view with `ps`:
+
+```bash
+[root@localhost ~]# sleep 1000 &
+[1] 2268
+[root@localhost ~]# ps 2268
+    PID TTY      STAT   TIME COMMAND
+   2268 pts/1    S      0:00 sleep 1000
+```
+
+If you only know the name of the process you can combine `ps` with `pgrep`:
+
+```bash
+[root@localhost ~]# for i in {1..3}; do sleep 1000 & done
+[1] 2272
+[2] 2273
+[3] 2274
+[root@localhost ~]# ps u $(pgrep 'sleep')
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root        2272  0.0  0.1 226648  1736 pts/1    S    21:32   0:00 sleep 1000
+root        2273  0.0  0.1 226648  1732 pts/1    S    21:32   0:00 sleep 1000
+root        2274  0.0  0.1 226648  1740 pts/1    S    21:32   0:00 sleep 1000
+```
+
+## Process scheduler
+
+To give the illusion that multiple processes are running at the same time, the **process scheduler** rapidly changes between processes. This is called **time-slicing** or **multi-tasking**.
+
+## Process priority
+
+The priority of a process can be modified through its **nice** value:
+- `-20`: highest priority
+- `0`: default priority
+- `19`: lowest priority
+
+Processes inherit the nice value from their parent process.
+
+A nice value lower than `0` can be set only by `root`!
+
+These values affect the CPU time that a process receives only when the CPU is overloaded, in which case processes with a lower nice value will have priority.
+
+The `top` commands displays the nice value in the `NI` column, the `PR` column is for the priority:
+
+```bash
+[root@localhost ~]# top -b1 | head
+top - 20:42:31 up  1:19,  1 user,  load average: 0.00, 0.03, 0.00
+Tasks: 107 total,   1 running, 106 sleeping,   0 stopped,   0 zombie
+%Cpu0  :  0.0 us,  9.1 sy,  0.0 ni, 90.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   1568.4 total,   1087.2 free,    268.6 used,    289.1 buff/cache     
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 root      20   0   43992  34924  10044 S   0.0   2.2   0:00.75 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+```
+
+From this example you can see that `systemd` has a default nice value (`0`) which maps to a priority of `20`, while `kworker+` has a nice value of `-20` which maps to a priority of `0` (highest priority).
+
+### Change process priority
+
+You can change the nice value directly through the `top` command by typing `r` (renice) and then the PID of the process that you want to modify.
+
+Another way is by using the `renice` command:
+
+```bash
+[root@localhost ~]# sleep 1000 &
+[2] 2204
+[root@localhost ~]# renice -n -19 2204
+2204 (process ID) old priority 0, new priority -19
+```
+
+### Start a process with a nice value
+
+To start a process with a specified nice value, use the `nice` command:
+
+```bash
+[root@localhost ~]# nice -n 19 sleep 1000 &
+[1] 2214
+[root@localhost ~]# top -b1 | grep 'sleep$'
+   2214 root      39  19  226648   1740   1636 S   0.0   0.1   0:00.00 sleep
+```
