@@ -112,6 +112,10 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Main configuration file for the `tuned` daemon
 
+- `/etc/selinux/`
+
+  Configuration directory for SELinux
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.

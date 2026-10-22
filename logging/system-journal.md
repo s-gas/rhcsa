@@ -1,6 +1,6 @@
 # System journal
 
-`systemd-journald` stores all the logs in a structured way in a binary file called `journal`. These files are in `/run/log` which by default does not persist reboot.
+`systemd-journald` stores all the logs in a structured way in a binary file called `journal`. These files are in `/run/log/` which by default does not persist reboot.
 
 ```bash
 [root@rocky /]$ file /run/log/journal/c66ffaecff7e43a3a1c23ff480c4027d/system.journal 
