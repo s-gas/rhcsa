@@ -91,8 +91,60 @@ Many commands include the `-Z` flag, which display the context labels:
 system_u:object_r:etc_t:s0 /etc/login.defs
 ```
 
-`/etc/login.defs` is labelled with:
+In this case, `/etc/login.defs` is labelled with:
 - `user`: `system_u`
 - `role`: `object_r`
 - `type`: `etc_t`
 - `security level`: `s0`
+
+Filenames are listed together with a label policy in `/etc/selinux/targeted/contexts/files/`. Files that don't match an existing labeling policy inherit the same label of the parent directory. In this way it is guaranteed that every file has a SELinux context label.
+
+This also means that copying a file from a directory to another might create a file with a different context label than the original. To preserve the context label when using the `cp` command, run it as `cp --preserve=context`:
+
+```bash
+[s-gas@localhost ~]$ cp /etc/ssh/ssh_config ~
+[s-gas@localhost ~]$ ls -Z ssh_config 
+unconfined_u:object_r:user_home_t:s0 ssh_config
+[s-gas@localhost ~]$ rm ssh_config 
+[s-gas@localhost ~]$ cp --preserve=context /etc/ssh/ssh_config ~
+[s-gas@localhost ~]$ ls -Z ssh_config 
+system_u:object_r:etc_t:s0 ssh_config
+```
+
+Moving a file, on the other hand, since it does not create a new inode, doesn't modify the context of that file. If you want to set a new context for that file according to its new path, run `mv -Z`:
+
+```bash
+[root@localhost ~]# touch file.txt
+[root@localhost ~]# mv file.txt /etc/
+[root@localhost ~]# ls -Z /etc/file.txt
+unconfined_u:object_r:admin_home_t:s0 /etc/file.txt
+[root@localhost ~]# rm -rf /etc/file.txt
+[root@localhost ~]# touch file.txt
+[root@localhost ~]# mv -Z file.txt /etc/
+[root@localhost ~]# ls -Z /etc/file.txt
+unconfined_u:object_r:etc_t:s0 /etc/file.txt
+```
+
+### Change context labels
+
+To manually change a label (temporary change), you can use `chcon`:
+
+```bash
+[root@localhost ~]# touch file.txt
+[root@localhost ~]# ls -Z file.txt 
+unconfined_u:object_r:admin_home_t:s0 file.txt
+[root@localhost ~]# chcon -t 'default_t' file.txt 
+[root@localhost ~]# ls -Z file.txt 
+unconfined_u:object_r:default_t:s0 file.txt
+```
+
+This relabel technique will survive reboot, but it is still considered temporary because, if `restorecon` is run on that file, it will replace the modified label with its correct context (based on the database `/etc/selinux/targeted/context/files/`):
+
+```bash
+[root@localhost ~]# ls -Z file.txt 
+unconfined_u:object_r:default_t:s0 file.txt
+[root@localhost ~]# restorecon -v file.txt 
+Relabeled /root/file.txt from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:admin_home_t:s0
+```
+
+The recommended way of changing a context label is through the `semanage fcontext` command, which displays and modifies the policies that determine the context label of a file.
