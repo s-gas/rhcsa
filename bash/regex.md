@@ -53,6 +53,15 @@ You can also use wildcards, one of these is the dot (`.`), which matches any sin
 	echo "It's a weekday"
 ```
 
+You can also combine the dot (`.`) with the asterisk (`*`) to say that the character can be present any number of times (including 0 times):
+
+```bash
+[root@localhost ~]# grep -i 'week.*' file.txt 
+echo "Weekday"
+echo "Weekend"
+echo "Twice a week"
+```
+
 A very useful usecase of `grep` with a regex is to exclude lines that are comments or are empty:
 
 ```bash
@@ -68,3 +77,16 @@ fi
 ```
 
 In this example, the `-v` flag is used to "reverse" the output, and the `-e` flag to check multiple patterns.
+
+Another useful regex is **the pirate** (`(/.*)?`), which is normally used to match a directory and its children. The parenthesis create a group and the question mark (`?`) makes the group optional:
+
+```bash
+[root@localhost ~]# semanage fcontext -l | grep '(/.*)?' | tail -5
+/var/www/svn/hooks(/.*)?                           all files          system_u:object_r:httpd_sys_script_exec_t:s0 
+/var/www/usage(/.*)?                               all files          system_u:object_r:webalizer_rw_content_t:s0 
+/var/www/wiki[0-9]?(/.*)?                          all files          system_u:object_r:mediawiki_rw_content_t:s0 
+/var/yp(/.*)?                                      all files          system_u:object_r:var_yp_t:s0 
+/xen(/.*)?                                         all files          system_u:object_r:xen_image_t:s0 
+```
+
+The example shows how this regex is used by SELinux in its context label policy.

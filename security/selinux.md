@@ -147,4 +147,59 @@ unconfined_u:object_r:default_t:s0 file.txt
 Relabeled /root/file.txt from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:admin_home_t:s0
 ```
 
+To restore the right policy for a directory and its children, run `restorecon -R`:
+
+```bash
+[root@localhost /]# restorecon -R /new
+```
+
 The recommended way of changing a context label is through the `semanage fcontext` command, which displays and modifies the policies that determine the context label of a file.
+
+The command is not installed by default, you need to install the `policycoreutils-python-utils` package:
+
+```bash
+[root@localhost /]# dnf install policycoreutils-python-utils -y > /dev/null
+```
+
+To list all the policies, you can run `semanage fcontext -l`:
+
+```bash
+[root@localhost ~]# semanage fcontext -l | grep '(/.*)?' | tail -5
+/var/www/svn/hooks(/.*)?                           all files          system_u:object_r:httpd_sys_script_exec_t:s0 
+/var/www/usage(/.*)?                               all files          system_u:object_r:webalizer_rw_content_t:s0 
+/var/www/wiki[0-9]?(/.*)?                          all files          system_u:object_r:mediawiki_rw_content_t:s0 
+/var/yp(/.*)?                                      all files          system_u:object_r:var_yp_t:s0 
+/xen(/.*)?                                         all files          system_u:object_r:xen_image_t:s0 
+```
+
+SELinux policies allow regex and many policies use **the pirate** (`(/.*)?`), which is appended to a directory and matches patterns where "a group of characters that start with `/` and followed by any number of characters (`.*`) is present, or not (`?`). This is used to apply the same policy to all the children of a directory.
+
+To create a new policy, run `semanage fcontext -a`:
+
+```bash
+[root@localhost /]# mkdir /new
+[root@localhost /]# ls -dZ /new
+unconfined_u:object_r:default_t:s0 /new
+[root@localhost /]# semanage fcontext -a -t 'tmp_t' '/new(/.*)?'
+[root@localhost /]# restorecon -v /new
+Relabeled /new from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:tmp_t:s0
+```
+
+With `semanage fcontext -l -C` you can list only the local policies:
+
+```bash
+[root@localhost /]# semanage fcontext -l -C
+SELinux fcontext                                   type               Context
+
+/new(/.*)?                                         all files          system_u:object_r:tmp_t:s0 
+```
+
+To delete a policy, run `semanage fcontext -d`:
+
+```bash
+[root@localhost /]# semanage fcontext -d '/new(/.*)?'
+[root@localhost /]# ls -dZ /new
+unconfined_u:object_r:tmp_t:s0 /new
+[root@localhost /]# restorecon -v /new
+Relabeled /new from unconfined_u:object_r:tmp_t:s0 to unconfined_u:object_r:default_t:s0
+```
