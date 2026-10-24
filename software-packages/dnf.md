@@ -363,3 +363,42 @@ metadata_expire=24h
 countme=1
 enabled=1
 ```
+
+To add a new repository, you can run `dnf config-manager --add-repo` and specifying the URL:
+
+```bash
+[root@localhost ~]# dnf config-manager --add-repo 'file:///mnt/BaseOS'
+Adding repo from: file:///mnt/BaseOS
+```
+
+This will create the `.repo` file in `/etc/yum.repo.d/` and enable the repository:
+
+```bash
+[root@localhost yum.repos.d]# cat mnt_BaseOS.repo 
+[mnt_BaseOS]
+name=created by dnf config-manager from file:///mnt/BaseOS
+baseurl=file:///mnt/BaseOS
+enabled=1
+```
+
+This can be also done by manually creating the `.repo` file.
+
+There are also packages which only purpose is to install a new repository, they are called **release packages**:
+
+```bash
+[root@localhost yum.repos.d]# dnf list epel-release
+Last metadata expiration check: 1:45:00 ago on Sat 24 Oct 2026 05:01:24 PM CEST.
+Available Packages
+epel-release.noarch                                  10-7.el10_1                                   extras
+[root@localhost yum.repos.d]# dnf install epel-release -y | tail -5
+
+Installed:
+  epel-release-10-7.el10_1.noarch                                               
+
+Complete!
+[root@localhost yum.repos.d]# ls
+epel.repo          rocky-addons.repo  rocky-extras.repo  rocky-security.repo
+epel-testing.repo  rocky-devel.repo   rocky.repo
+```
+
+Installing `epel-release` created two new repos: `epel.repo` and `epel-testing.repo`, which can be used to install other packages.

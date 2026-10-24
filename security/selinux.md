@@ -203,3 +203,94 @@ unconfined_u:object_r:tmp_t:s0 /new
 [root@localhost /]# restorecon -v /new
 Relabeled /new from unconfined_u:object_r:tmp_t:s0 to unconfined_u:object_r:default_t:s0
 ```
+
+## SELinux booleans
+
+The SELinux policy of an application can also include optional behaviours/features. These behaviours can be enable or disabled through SELInux booleans.
+
+The command to interact with SELinux is `semanage boolean`.
+
+To list all the booleans, run `semanage boolean -l`:
+
+```bash
+[root@localhost /]# semanage boolean -l | grep 'httpd'
+httpd_anon_write               (off  ,  off)  Allow httpd to anon write
+httpd_builtin_scripting        (on   ,   on)  Allow httpd to builtin scripting
+httpd_can_check_spam           (off  ,  off)  Allow httpd to can check spam
+httpd_can_connect_ftp          (off  ,  off)  Allow httpd to can connect ftp
+httpd_can_connect_ldap         (off  ,  off)  Allow httpd to can connect ldap
+httpd_can_connect_mythtv       (off  ,  off)  Allow httpd to can connect mythtv
+httpd_can_connect_zabbix       (off  ,  off)  Allow httpd to can connect zabbix
+httpd_can_manage_courier_spool (off  ,  off)  Allow httpd to can manage courier spool
+httpd_can_network_connect      (off  ,  off)  Allow httpd to can network connect
+httpd_can_network_connect_cobbler (off  ,  off)  Allow httpd to can network connect cobbler
+httpd_can_network_connect_db   (off  ,  off)  Allow httpd to can network connect db
+httpd_can_network_memcache     (off  ,  off)  Allow httpd to can network memcache
+httpd_can_network_redis        (off  ,  off)  Allow httpd to can network redis
+httpd_can_network_relay        (off  ,  off)  Allow httpd to can network relay
+httpd_can_sendmail             (off  ,  off)  Allow httpd to can sendmail
+httpd_dbus_avahi               (off  ,  off)  Allow httpd to dbus avahi
+httpd_dbus_sssd                (off  ,  off)  Allow httpd to dbus sssd
+httpd_dontaudit_search_dirs    (off  ,  off)  Allow httpd to dontaudit search dirs
+httpd_enable_cgi               (on   ,   on)  Allow httpd to enable cgi
+httpd_enable_ftp_server        (off  ,  off)  Allow httpd to enable ftp server
+httpd_enable_homedirs          (off  ,  off)  Allow httpd to enable homedirs
+httpd_execmem                  (off  ,  off)  Allow httpd to execmem
+httpd_graceful_shutdown        (off  ,  off)  Allow httpd to graceful shutdown
+httpd_manage_ipa               (off  ,  off)  Allow httpd to manage ipa
+httpd_mod_auth_ntlm_winbind    (off  ,  off)  Allow httpd to mod auth ntlm winbind
+httpd_mod_auth_pam             (off  ,  off)  Allow httpd to mod auth pam
+httpd_read_user_content        (off  ,  off)  Allow httpd to read user content
+httpd_run_ipa                  (off  ,  off)  Allow httpd to run ipa
+httpd_run_preupgrade           (off  ,  off)  Allow httpd to run preupgrade
+httpd_run_stickshift           (off  ,  off)  Allow httpd to run stickshift
+httpd_serve_cobbler_files      (off  ,  off)  Allow httpd to serve cobbler files
+httpd_setrlimit                (off  ,  off)  Allow httpd to setrlimit
+httpd_ssi_exec                 (off  ,  off)  Allow httpd to ssi exec
+httpd_sys_script_anon_write    (off  ,  off)  Allow httpd to sys script anon write
+httpd_tmp_exec                 (off  ,  off)  Allow httpd to tmp exec
+httpd_tty_comm                 (off  ,  off)  Allow httpd to tty comm
+httpd_unified                  (off  ,  off)  Allow httpd to unified
+httpd_use_cifs                 (off  ,  off)  Allow httpd to use cifs
+httpd_use_fusefs               (off  ,  off)  Allow httpd to use fusefs
+httpd_use_gpg                  (off  ,  off)  Allow httpd to use gpg
+httpd_use_nfs                  (off  ,  off)  Allow httpd to use nfs
+httpd_use_opencryptoki         (off  ,  off)  Allow httpd to use opencryptoki
+httpd_use_openstack            (off  ,  off)  Allow httpd to use openstack
+httpd_use_sasl                 (off  ,  off)  Allow httpd to use sasl
+httpd_verify_dns               (off  ,  off)  Allow httpd to verify dns
+```
+
+The output displays two states for each boolean, `(off  , off)`, the first is the current state, the second is the persistent state.
+
+To change the current state of a boolean, run `setsebool`:
+
+```bash
+[root@localhost /]# setsebool httpd_use_nfs on
+[root@localhost /]# semanage boolean -l | grep httpd_use_nfs
+httpd_use_nfs                  (on   ,  off)  Allow httpd to use nfs
+```
+
+You can also view the current state of a specific boolean with `getsebool`:
+
+```bash
+[root@localhost /]# getsebool httpd_use_nfs
+httpd_use_nfs --> on
+```
+
+To change also the persistent state, run `setsebool -P`:
+
+```bash
+[root@localhost /]# setsebool -P httpd_use_nfs on
+[root@localhost /]# semanage boolean -l | grep httpd_use_nfs
+httpd_use_nfs                  (on   ,   on)  Allow httpd to use nfs
+```
+
+As for `semanage fcontext`, also for booleans you can list only booleans that have been modified. Use `semanage boolean -l -C`:
+
+```bash
+[root@localhost /]# semanage boolean -l -C
+SELinux boolean                State  Default Description
+
+httpd_use_nfs                  (on   ,   on)  Allow httpd to use nfs
+```
