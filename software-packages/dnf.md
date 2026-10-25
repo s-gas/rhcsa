@@ -381,7 +381,7 @@ baseurl=file:///mnt/BaseOS
 enabled=1
 ```
 
-This can be also done by manually creating the `.repo` file.
+> This can be also done by manually creating the `.repo` file.
 
 There are also packages which only purpose is to install a new repository, they are called **release packages**:
 

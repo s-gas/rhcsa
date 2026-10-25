@@ -294,3 +294,107 @@ SELinux boolean                State  Default Description
 
 httpd_use_nfs                  (on   ,   on)  Allow httpd to use nfs
 ```
+
+## SELinux ports
+
+SELinux provides also port labels, which are used to label what port can an application use.
+
+You can list all the port labels with `semanage port -l`:
+
+```bash
+[s-gas@localhost ~]$ sudo semanage port -l | grep '^http_port_t'
+http_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+http_port_t                    udp      80, 443
+```
+
+The example shows that the applications that have the `http_port_t` port label can only use specific ports for both `tcp` and `udp` connections.
+
+To add a port to a port label, run `semanage port -a` specifying the type of the context label and the port to add:
+
+```bash
+[root@localhost httpd]# semanage port -a -t 'http_port_t' -p tcp 82
+[root@localhost httpd]# semanage port -l | grep '^http_port_t'
+http_port_t                    tcp      82, 80, 81, 443, 488, 8008, 8009, 8443, 9000
+http_port_t                    udp      80, 443
+```
+
+## Troubleshoot SELinux issues
+
+### Check logs
+
+Whenever SELinux denies an action, that action gets recorded in `/var/log/audit/audit.log` as an AVC (Access Vector Cache) message. These logs are collected by the `auditd` daemon, not by `rsyslog`:
+
+```bash
+[root@localhost ~]# grep 'type=AVC' /var/log/audit/audit.log | tail -1 
+type=AVC msg=audit(1792923645.885:136): avc:  denied  { name_bind } for  pid=2019 comm="httpd" src=111 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:portmap_port_t:s0 tclass=tcp_socket permissive=0
+```
+
+The log explains that `httpd` was denied. The reason for this is because I change its configuration file to listen to port `111`, which is not in the list of ports labeld as `http_port_t`.
+
+For querying audit logs you can also use `ausearch`, through which you can specify the message type with the `-m` flag:
+
+```bash
+[root@localhost ~]# ausearch -m AVC | tail
+----
+time->Sun Oct 25 11:20:45 2026
+type=PROCTITLE msg=audit(1792923645.885:135): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+type=SYSCALL msg=audit(1792923645.885:135): arch=c00000b7 syscall=200 success=no exit=-13 a0=4 a1=aaaae0e5f480 a2=1c a3=0 items=0 ppid=1 pid=2019 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=AVC msg=audit(1792923645.885:135): avc:  denied  { name_bind } for  pid=2019 comm="httpd" src=111 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:portmap_port_t:s0 tclass=tcp_socket permissive=0
+----
+time->Sun Oct 25 11:20:45 2026
+type=PROCTITLE msg=audit(1792923645.885:136): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+type=SYSCALL msg=audit(1792923645.885:136): arch=c00000b7 syscall=200 success=no exit=-13 a0=3 a1=aaaae0e5f3c0 a2=10 a3=0 items=0 ppid=1 pid=2019 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=AVC msg=audit(1792923645.885:136): avc:  denied  { name_bind } for  pid=2019 comm="httpd" src=111 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:portmap_port_t:s0 tclass=tcp_socket permissive=0
+```
+
+The errors are also logged in `/var/log/messages`:
+
+```bash
+[root@localhost ~]# grep 'httpd' /var/log/messages
+Oct 25 11:20:45 localhost systemd[1]: Starting httpd.service - The Apache HTTP Server...
+Oct 25 11:20:45 localhost (httpd)[2019]: httpd.service: Referenced but unset environment variable evaluates to an empty string: OPTIONS
+Oct 25 11:20:45 localhost httpd[2019]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to suppress this message
+Oct 25 11:20:45 localhost httpd[2019]: (13)Permission denied: AH00072: make_sock: could not bind to address [::]:111
+Oct 25 11:20:45 localhost httpd[2019]: (13)Permission denied: AH00072: make_sock: could not bind to address 0.0.0.0:111
+Oct 25 11:20:45 localhost httpd[2019]: no listening sockets available, shutting down
+Oct 25 11:20:45 localhost httpd[2019]: AH00015: Unable to open logs
+Oct 25 11:20:45 localhost systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE
+Oct 25 11:20:45 localhost systemd[1]: httpd.service: Failed with result 'exit-code'.
+Oct 25 11:20:45 localhost systemd[1]: Failed to start httpd.service - The Apache HTTP Server.
+```
+
+The `httpd` service failed to start because of `(13)Permission denied: AH00072: make_sock: could not bind to address [::]:111`.
+
+The same information can be of course retrieved with `journalctl` and filtering by unit:
+
+```bash
+[root@localhost ~]# journalctl -u 'httpd' 
+Oct 25 11:20:45 localhost.localdomain systemd[1]: Starting httpd.service - The Apache HTTP Server...
+Oct 25 11:20:45 localhost.localdomain (httpd)[2019]: httpd.service: Referenced but unset environment variable evaluates to an empty string: OPTIONS
+Oct 25 11:20:45 localhost.localdomain httpd[2019]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to su>
+Oct 25 11:20:45 localhost.localdomain httpd[2019]: (13)Permission denied: AH00072: make_sock: could not bind to address [::]:111
+Oct 25 11:20:45 localhost.localdomain httpd[2019]: (13)Permission denied: AH00072: make_sock: could not bind to address 0.0.0.0:111
+Oct 25 11:20:45 localhost.localdomain httpd[2019]: no listening sockets available, shutting down
+Oct 25 11:20:45 localhost.localdomain httpd[2019]: AH00015: Unable to open logs
+Oct 25 11:20:45 localhost.localdomain systemd[1]: httpd.service: Main process exited, code=exited, status=1/FAILURE
+Oct 25 11:20:45 localhost.localdomain systemd[1]: httpd.service: Failed with result 'exit-code'.
+Oct 25 11:20:45 localhost.localdomain systemd[1]: Failed to start httpd.service - The Apache HTTP Server.
+```
+
+### Change state to permissive
+
+If you are unsure whether the problem is caused by SELinux, a valid technique could be to set SELinux to `permissive` and then check if the issue does not appear anymore:
+
+```bash
+[root@localhost ~]# systemctl enable --now httpd
+Job for httpd.service failed because the control process exited with error code.
+See "systemctl status httpd.service" and "journalctl -xeu httpd.service" for details.
+[root@localhost ~]# setenforce 0
+[root@localhost ~]# getenforce
+Permissive
+[root@localhost ~]# systemctl enable --now httpd
+[root@localhost ~]# echo $?
+0
+```
+
+> It is recommended to solve the issue and set SELinux back to `enforced`!
