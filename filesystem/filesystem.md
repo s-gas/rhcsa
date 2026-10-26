@@ -137,7 +137,7 @@ sr0
 
 ## Examine File System
 
-To display the file-system devices and their mount point, use `df`:
+To display the file-system devices and their mount point, use `df`. `df -h` display the size in binary format (1024-based):
 
 ```bash
 [root@rocky ~]$ df -h
@@ -152,6 +152,23 @@ tmpfs                 314M  6.6M  308M   3% /run
 tmpfs                 1.0M     0  1.0M   0% /run/credentials/getty@tty1.service
 tmpfs                 157M  4.0K  157M   1% /run/user/1001
 tmpfs                 1.0M     0  1.0M   0% /run/credentials/systemd-journald.service
+```
+
+Use `df -H` to view the size in decimal format:
+
+```bash
+[s-gas@localhost ~]$ df -H
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/rlm-root   17G  2.1G   15G  13% /
+devtmpfs              804M     0  804M   0% /dev
+tmpfs                 823M     0  823M   0% /dev/shm
+efivarfs              263k   44k  219k  17% /sys/firmware/efi/efivars
+tmpfs                 329M  4.7M  325M   2% /run
+tmpfs                 1.1M     0  1.1M   0% /run/credentials/systemd-journald.service
+/dev/sda2             2.1G  261M  1.9G  13% /boot
+/dev/sda1             628M   14M  615M   3% /boot/efi
+tmpfs                 165M  4.1k  165M   1% /run/user/1000
+tmpfs                 1.1M     0  1.1M   0% /run/credentials/getty@tty1.service
 ```
 
 Use `du` to view disk usage of a specific directory:

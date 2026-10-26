@@ -96,6 +96,19 @@ Matched from:
 Other       : /etc/NetworkManager/
 ```
 
+The `dnf provides` command works even without providing the full path. For example you might know only the name of the `command` that you want to use:
+
+```bash
+[root@localhost ~]# dnf provides sealert
+Extra Packages for Enterprise Linux 10 - aarch64                                                                                                                                     5.1 MB/s |  18 MB     00:03    
+Rocky Linux 10 - AppStream                                                                                                                                                           6.0 MB/s |  30 MB     00:05    
+Last metadata expiration check: 0:00:03 ago on Sun 25 Oct 2026 12:03:52 PM CET.
+setroubleshoot-server-3.3.35-4.el10.aarch64 : SELinux troubleshoot server
+Repo        : appstream
+Matched from:
+Filename    : /usr/bin/sealert
+```
+
 To install a package, use `dnf install`:
 
 ```bash

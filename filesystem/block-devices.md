@@ -34,6 +34,19 @@ In the example, `sda1`, `sda2`, `sda3` are partitions of `sda`. Partitions are b
 brw-rw----. 1 root disk 8, 1 Oct  9 21:49 /dev/sda1
 ```
 
+### MBR
+
+The MBR partitioning scheme is the standard on systems that run BIOS firmware.
+
+Now it's legacy because of its 32-bit partition size, which allows up to 2 TiB disk and partition size.
+
+### GPT
+
+THE GPT partitioning scheme is the standard on system that run UEFI firmware.
+
+It uses a 64-bit partition size and provides a GUID (globally unique identifier) to identify each disk and partition.
+
+
 ## Logical Volumes
 
 Storage devices can be organized also in logical volumes through LVM (Logical Volume Management). Block devices get aggregated into a volume group and its disk space is separated into logical volumes, which is functionally equivalent to partitioning.
