@@ -116,6 +116,10 @@ Files on a Linux system are organized into a single inverted tree of directories
 
   Configuration directory for SELinux
 
+- `/etc/fstab`
+
+  File containing the file systems to mount at boot time
+
 ## Local file system
 
 RHEL uses `XFS` as default file system. `ext4` is also supported.
@@ -180,11 +184,47 @@ Use `du` to view disk usage of a specific directory:
 
 Here the `-s` flag display the summary instead of displaying recursively the size of each file.
 
+## Create file systems
+
+As mentioned already, `XFS` is the default file system on RHEL. To create it, run `mkfs.xfs`:
+
+```bash
+[root@localhost ~]# lsblk -f                                              
+NAME         FSTYPE      FSVER    LABEL UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                           
+├─sda1       vfat        FAT32          B2AD-34AB                               585.6M     2% /boot/efi
+├─sda2       xfs                        0d89c457-3fc9-4f6f-b542-8bd6f01999c5      1.7G    13% /boot
+└─sda3       LVM2_member LVM2 001       at8gx2-OiRm-wkor-UJrW-s1tQ-nYr9-CrdaSs                
+  ├─rlm-root xfs                        8e42d026-99ee-4d95-a3e7-f766cf0f2ca5     13.5G    12% /
+  └─rlm-swap swap        1              5208dcad-d81b-41bd-b542-7cbd5add5281                  [SWAP]
+sdb                                                                                           
+└─sdb1                                                                                        
+[root@localhost ~]# mkfs.xfs /dev/sdb1
+meta-data=/dev/sdb1              isize=512    agcount=4, agsize=30464 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=1
+         =                       reflink=1    bigtime=1 inobtcount=1 nrext64=1
+         =                       exchange=0   metadir=0
+data     =                       bsize=4096   blocks=121856, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
+log      =internal log           bsize=4096   blocks=16384, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+         =                       rgcount=0    rgsize=0 extents
+         =                       zoned=0      start=0 reserved=0
+[root@localhost ~]# lsblk -f /dev/sdb1
+NAME FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+sdb1 xfs                76fd7521-b3a8-4ff1-904c-99d95d64673e                
+```
+
 ## Mount points
 
 A mount point is an empty directory to which a filesystem is mounted. When the directory is mounted, it's content can be viewed and accessed from the system.
 
-On a server, you might need to `mount` manually a storage device to access its filesystem. If you mount manually, remember to reboot the system:
+## Mount manually
+
+On a server, you might need to `mount` manually a storage device to access its filesystem. Mounting manually does not persist reboots:
 
 ```bash
 [root@rocky /]$ mount /dev/sda2 /mnt/data
@@ -246,3 +286,27 @@ bash    12678 root  cwd    DIR    8,2     4096  128 /mnt/data
 lsof    12861 root  cwd    DIR    8,2     4096  128 /mnt/data
 lsof    12862 root  cwd    DIR    8,2     4096  128 /mnt/data
 ```
+
+## Mount persistently
+
+As said before, manually mounting a file system with `mount` does not persist reboots. To automatically mount the file system during system boot, add an entry to `/etc/fstab`. This configuration file lists the file systems to mount at system boot:
+
+```bash
+[root@localhost ~]# grep '^[^#]' /etc/fstab 
+UUID=8e42d026-99ee-4d95-a3e7-f766cf0f2ca5 /                       xfs     defaults        0 0
+UUID=0d89c457-3fc9-4f6f-b542-8bd6f01999c5 /boot                   xfs     defaults        0 0
+UUID=B2AD-34AB          /boot/efi               vfat    umask=0077,shortname=winnt 0 2
+UUID=5208dcad-d81b-41bd-b542-7cbd5add5281 none                    swap    defaults        0 0
+```
+
+Every entry consists of 6 fields:
+- `UUID`
+- mount point
+- file system type
+- comma separated list of options to apply to the device (`defaults` sets the default ones)
+- used by the `dump` command to back up the device
+- determines whether to run `fsck` at system boot to check if the file systems are clean. For XFS set it to `0`, for ext4 set it to `1`, for other ext4 file systems set it to `2`.
+
+> An incorrect entry in `/etc/fstab` might cause a failure during boot!
+
+After you add or remove an entry, remember to reboot the system!
