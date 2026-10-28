@@ -198,6 +198,8 @@ sdb      8:16   0  200M  0 disk
 └─sdb1   8:17   0   94M  0 part 
 ```
 
+For GPT partitions, the first argument of `parted mkpart` is not the partition type but the name that you want to give to that partition!
+
 ### Delete a partition
 
 To delete a partition, run `parted rm`:

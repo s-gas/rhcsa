@@ -48,6 +48,8 @@ Number  Start   End     Size   File system  Name     Flags
 
 ```
 
+Remember that with the GPT partition scheme, the first argument of the `parted mkpart` command is not the partition type but is the name that you give to that partition. In the example the partition is called `primary`.
+
 Once you have a partition with `linux-swap` file system type, you can create a swap space by running `mkswap`:
 
 ```bash
@@ -95,6 +97,14 @@ Mem:           1.5Gi       283Mi       961Mi       8.3Mi       404Mi       1.3Gi
 Swap:          2.0Gi          0B       2.0Gi
 ```
 
+You can also use `swapon -s` to view the active swap spaces:
+
+```bash
+[s-gas@localhost ~]$ swapon -s
+Filename				Type		Size		Used		Priority
+/dev/dm-1                               partition	2097148		0		-2
+```
+
 ## Activate swap space persistently
 
 To add a swap space persistently, add an entry to `/etc/fstab`:
@@ -108,7 +118,7 @@ UUID=5208dcad-d81b-41bd-b542-7cbd5add5281 none                    swap    defaul
 UUID=eaf1662b-aa32-4103-88a8-eec2ad012318 swap			  swap    defaults        0 0
 ```
 
-The entry for swap space is the same as for other file systems, the difference is that instead of the mount point you must specify `swap`.
+The entry for swap space is the same as for other file systems, the difference is that instead of the mount point you can either specify `swap` or `none`.
 
 You can also specify the priority of the swap area. A swap area with higher priority will get used before one with lower priority. By default the priority is set to `-2`. You can set the priority in the fourth column. Instead of `defaults` you can specify `pri=X`:
 
@@ -117,3 +127,12 @@ You can also specify the priority of the swap area. A swap area with higher prio
 UUID=5208dcad-d81b-41bd-b542-7cbd5add5281 none                    swap    pri=2        0 0
 UUID=eaf1662b-aa32-4103-88a8-eec2ad012318 swap			  swap    defaults        0 0
 ```
+
+To activate all the swap space entries in `/etc/fstab`, run `swapon -av`:
+
+```bash
+[s-gas@localhost ~]$ swapon -av
+swapon: /dev/mapper/rlm-swap: already active -- ignored
+```
+
+If a swap area is already active and you modify the priority, you might need to deactivate it with `swapoff` and then reactivate it with `swapon -av`.
