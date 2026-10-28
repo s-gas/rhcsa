@@ -18,107 +18,6 @@ Files on a Linux system are organized into a single inverted tree of directories
 | `/var`   | system persistent dynamic data |
 | `/mnt`   | temporary mountpoints |
 
-## `/etc`: useful files and directories
-
-- `/etc/profile` and `/etc/profile.d/`
-
-  Variables available to all users
-
-- `/etc/sudoers` and `/etc/sudoers.d/`
-
-  Configuration for `sudo` access
-
-- `/etc/passwd`
-
-  Information about users
-
-- `/etc/group`
-
-  Information about groups
-
-- `/etc/shadow`
-
-  Information about passwords
-
-- `/etc/login.defs`
-
-  Configuration for users and groups
-
-- `/etc/ssh/`
-
-  Configuration for SSH
-
-- `/etc/hosts`
-
-  Manual configuration for hostnames
-
-- `/etc/hostname`
-
-  Configuration for the machine's static hostname
-
-- `/etc/NetworkManager/system-connection`
-
-  Network configuration files
-
-- `/etc/nsswitch.conf`
-
-  Name Service Switch configuration file (where and in what order to look up admin and network databases)
-
-- `/etc/resolv.conf`
-
-  Configuration for DNS server
-
-- `/etc/yum.repos.d/`
-
-  Configuration for package repositories (`.repo` files)
-
-- `/etc/crontab` and `/etc/cron.d/`
-
-  Configuration for cron jobs
-
-- `/etc/cron.hourly/`, `/etc/cron.daily/`, `/etc/cron.weekly/`, `/etc/cron.monthly/`
-
-  Directories contains scripts to be executed in that interval
-
-- `/etc/anacrontab`
-
-  Configuration for anacron
-
-- `/etc/systemd/system/`
-
-  Directory containing custom configuration for `systemd` units. It has priority over `/usr/lib/systemd/system/`.
-
-- `/etc/tmpfiles.d/`
-
-  Drop-in directory containing custom configuration for `systemd-tmpfiles`. It has priority over `/usr/lib/tmpfiles.d/`
-
-- `/etc/rsyslog.conf` and `/etc/rsyslog.d/`
-
-  Configuration for the `rsyslog` service
-
-- `/etc/logrotate.conf` and `/etc/logrotate.d/`
-
-  Configuration for `logrotate`
-
-- `/etc/systemd/journald.conf` and `/etc/systemd/journald.conf.d/`
-
-  Custom configuration for `systemd-journald`. It has priority over `/usr/lib/systemd/journald.conf`
-
-- `/etc/chrony.conf`
-
-  Configuration for the `chronyd` service
-
-- `/etc/tuned/tuned-main.conf`
-
-  Main configuration file for the `tuned` daemon
-
-- `/etc/selinux/`
-
-  Configuration directory for SELinux
-
-- `/etc/fstab`
-
-  File containing the file systems to mount at boot time
 
 ## Local file system
 
@@ -307,6 +206,28 @@ Every entry consists of 6 fields:
 - used by the `dump` command to back up the device
 - determines whether to run `fsck` at system boot to check if the file systems are clean. For XFS set it to `0`, for ext4 set it to `1`, for other ext4 file systems set it to `2`.
 
-> An incorrect entry in `/etc/fstab` might cause a failure during boot!
+After you add or remove an entry, remember to reboot the system or to reload `systemd` with `systemctl daemon-reload`!
 
-After you add or remove an entry, remember to reboot the system!
+An incorrect entry in `/etc/fstab` might cause a failure during boot, to check whether your entries are correct, you can run `mount -av`:
+
+```bash
+[s-gas@localhost ~]$ mount -av
+/                        : ignored
+/boot                    : already mounted
+/boot/efi                : already mounted
+none                     : ignored
+/mnt/new                 : already mounted
+```
+
+
+This command causes all the filesystem to be mounted at the mount point specified in the entries and it is a good way to see if there is a mistake in `/etc/fstab`. With a wrong entry, it will output:
+
+```bash
+[root@localhost ~]# mount -av
+/                        : ignored
+/boot                    : already mounted
+/boot/efi                : already mounted
+none                     : ignored
+/mnt/new                 : already mounted
+mount: /mnt/new: can't find UUID=76fd7521-b3a8-4ff1-904c-000000000000.
+```
