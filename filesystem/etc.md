@@ -98,4 +98,4 @@
 
 - `/etc/fstab`
 
-  File containing the file systems to mount at boot time
+  File containing the file systems to mount at boot time (including swap areas)
