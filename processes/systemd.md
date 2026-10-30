@@ -86,7 +86,7 @@ Never modify the vendor configuration, the change would get lost as soon as the 
 If you decide to modify the configuration files, remember to reload the `systemd` daemon with:
 
 ```bash
-[root@localhost ~]# systemctl daemon-reload
+[root@localhost ~]$ systemctl daemon-reload
 ```
 
 To view the configuration of a unit you can use `systemctl cat`:

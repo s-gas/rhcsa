@@ -99,7 +99,7 @@ Other       : /etc/NetworkManager/
 The `dnf provides` command works even without providing the full path. For example you might know only the name of the `command` that you want to use:
 
 ```bash
-[root@localhost ~]# dnf provides sealert
+[root@localhost ~]$ dnf provides sealert
 Extra Packages for Enterprise Linux 10 - aarch64                                                                                                                                     5.1 MB/s |  18 MB     00:03    
 Rocky Linux 10 - AppStream                                                                                                                                                           6.0 MB/s |  30 MB     00:05    
 Last metadata expiration check: 0:00:03 ago on Sun 25 Oct 2026 12:03:52 PM CET.
@@ -380,14 +380,14 @@ enabled=1
 To add a new repository, you can run `dnf config-manager --add-repo` and specifying the URL:
 
 ```bash
-[root@localhost ~]# dnf config-manager --add-repo 'file:///mnt/BaseOS'
+[root@localhost ~]$ dnf config-manager --add-repo 'file:///mnt/BaseOS'
 Adding repo from: file:///mnt/BaseOS
 ```
 
 This will create the `.repo` file in `/etc/yum.repo.d/` and enable the repository:
 
 ```bash
-[root@localhost yum.repos.d]# cat mnt_BaseOS.repo 
+[root@localhost yum.repos.d]$ cat mnt_BaseOS.repo 
 [mnt_BaseOS]
 name=created by dnf config-manager from file:///mnt/BaseOS
 baseurl=file:///mnt/BaseOS
@@ -399,17 +399,17 @@ enabled=1
 There are also packages which only purpose is to install a new repository, they are called **release packages**:
 
 ```bash
-[root@localhost yum.repos.d]# dnf list epel-release
+[root@localhost yum.repos.d]$ dnf list epel-release
 Last metadata expiration check: 1:45:00 ago on Sat 24 Oct 2026 05:01:24 PM CEST.
 Available Packages
 epel-release.noarch                                  10-7.el10_1                                   extras
-[root@localhost yum.repos.d]# dnf install epel-release -y | tail -5
+[root@localhost yum.repos.d]$ dnf install epel-release -y | tail -5
 
 Installed:
   epel-release-10-7.el10_1.noarch                                               
 
 Complete!
-[root@localhost yum.repos.d]# ls
+[root@localhost yum.repos.d]$ ls
 epel.repo          rocky-addons.repo  rocky-extras.repo  rocky-security.repo
 epel-testing.repo  rocky-devel.repo   rocky.repo
 ```

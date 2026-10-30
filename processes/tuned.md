@@ -122,7 +122,7 @@ Profile description:
 To change to a different profile, run `tuned-adm profile`:
 
 ```bash
-[root@localhost ~]# tuned-adm profile virtual-guest
-[root@localhost ~]# tuned-adm active
+[root@localhost ~]$ tuned-adm profile virtual-guest
+[root@localhost ~]$ tuned-adm active
 Current active profile: virtual-guest
 ```

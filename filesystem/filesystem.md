@@ -88,7 +88,7 @@ Here the `-s` flag display the summary instead of displaying recursively the siz
 As mentioned already, `XFS` is the default file system on RHEL. To create it, run `mkfs.xfs`:
 
 ```bash
-[root@localhost ~]# lsblk -f                                              
+[root@localhost ~]$ lsblk -f                                              
 NAME         FSTYPE      FSVER    LABEL UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
 sda                                                                                           
 ├─sda1       vfat        FAT32          B2AD-34AB                               585.6M     2% /boot/efi
@@ -98,7 +98,7 @@ sda
   └─rlm-swap swap        1              5208dcad-d81b-41bd-b542-7cbd5add5281                  [SWAP]
 sdb                                                                                           
 └─sdb1                                                                                        
-[root@localhost ~]# mkfs.xfs /dev/sdb1
+[root@localhost ~]$ mkfs.xfs /dev/sdb1
 meta-data=/dev/sdb1              isize=512    agcount=4, agsize=30464 blks
          =                       sectsz=512   attr=2, projid32bit=1
          =                       crc=1        finobt=1, sparse=1, rmapbt=1
@@ -112,7 +112,7 @@ log      =internal log           bsize=4096   blocks=16384, version=2
 realtime =none                   extsz=4096   blocks=0, rtextents=0
          =                       rgcount=0    rgsize=0 extents
          =                       zoned=0      start=0 reserved=0
-[root@localhost ~]# lsblk -f /dev/sdb1
+[root@localhost ~]$ lsblk -f /dev/sdb1
 NAME FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
 sdb1 xfs                76fd7521-b3a8-4ff1-904c-99d95d64673e                
 ```
@@ -191,7 +191,7 @@ lsof    12862 root  cwd    DIR    8,2     4096  128 /mnt/data
 As said before, manually mounting a file system with `mount` does not persist reboots. To automatically mount the file system during system boot, add an entry to `/etc/fstab`. This configuration file lists the file systems to mount at system boot:
 
 ```bash
-[root@localhost ~]# grep '^[^#]' /etc/fstab 
+[root@localhost ~]$ grep '^[^#]' /etc/fstab 
 UUID=8e42d026-99ee-4d95-a3e7-f766cf0f2ca5 /                       xfs     defaults        0 0
 UUID=0d89c457-3fc9-4f6f-b542-8bd6f01999c5 /boot                   xfs     defaults        0 0
 UUID=B2AD-34AB          /boot/efi               vfat    umask=0077,shortname=winnt 0 2
@@ -223,7 +223,7 @@ none                     : ignored
 This command causes all the filesystem to be mounted at the mount point specified in the entries and it is a good way to see if there is a mistake in `/etc/fstab`. With a wrong entry, it will output:
 
 ```bash
-[root@localhost ~]# mount -av
+[root@localhost ~]$ mount -av
 /                        : ignored
 /boot                    : already mounted
 /boot/efi                : already mounted

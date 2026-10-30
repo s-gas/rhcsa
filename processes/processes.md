@@ -99,9 +99,9 @@ root           4  0.0  0.0      0     0 ?        I<   Sep22   0:00 [kworker/R-rc
 You can specify the PID of the process that you want to view with `ps`:
 
 ```bash
-[root@localhost ~]# sleep 1000 &
+[root@localhost ~]$ sleep 1000 &
 [1] 2268
-[root@localhost ~]# ps 2268
+[root@localhost ~]$ ps 2268
     PID TTY      STAT   TIME COMMAND
    2268 pts/1    S      0:00 sleep 1000
 ```
@@ -109,11 +109,11 @@ You can specify the PID of the process that you want to view with `ps`:
 If you only know the name of the process you can combine `ps` with `pgrep`:
 
 ```bash
-[root@localhost ~]# for i in {1..3}; do sleep 1000 & done
+[root@localhost ~]$ for i in {1..3}; do sleep 1000 & done
 [1] 2272
 [2] 2273
 [3] 2274
-[root@localhost ~]# ps u $(pgrep 'sleep')
+[root@localhost ~]$ ps u $(pgrep 'sleep')
 USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root        2272  0.0  0.1 226648  1736 pts/1    S    21:32   0:00 sleep 1000
 root        2273  0.0  0.1 226648  1732 pts/1    S    21:32   0:00 sleep 1000
@@ -140,7 +140,7 @@ These values affect the CPU time that a process receives only when the CPU is ov
 The `top` commands displays the nice value in the `NI` column, the `PR` column is for the priority:
 
 ```bash
-[root@localhost ~]# top -b1 | head
+[root@localhost ~]$ top -b1 | head
 top - 20:42:31 up  1:19,  1 user,  load average: 0.00, 0.03, 0.00
 Tasks: 107 total,   1 running, 106 sleeping,   0 stopped,   0 zombie
 %Cpu0  :  0.0 us,  9.1 sy,  0.0 ni, 90.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
@@ -162,9 +162,9 @@ You can change the nice value directly through the `top` command by typing `r` (
 Another way is by using the `renice` command:
 
 ```bash
-[root@localhost ~]# sleep 1000 &
+[root@localhost ~]$ sleep 1000 &
 [2] 2204
-[root@localhost ~]# renice -n -19 2204
+[root@localhost ~]$ renice -n -19 2204
 2204 (process ID) old priority 0, new priority -19
 ```
 
@@ -173,8 +173,8 @@ Another way is by using the `renice` command:
 To start a process with a specified nice value, use the `nice` command:
 
 ```bash
-[root@localhost ~]# nice -n 19 sleep 1000 &
+[root@localhost ~]$ nice -n 19 sleep 1000 &
 [1] 2214
-[root@localhost ~]# top -b1 | grep 'sleep$'
+[root@localhost ~]$ top -b1 | grep 'sleep$'
    2214 root      39  19  226648   1740   1636 S   0.0   0.1   0:00.00 sleep
 ```

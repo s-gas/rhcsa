@@ -27,13 +27,13 @@ Enforcing
 You can change the mode (enforcing/permissive) with `setenforce`:
 
 ```bash
-[root@localhost ~]# setenforce
+[root@localhost ~]$ setenforce
 usage:  setenforce [ Enforcing | Permissive | 1 | 0 ]
-[root@localhost ~]# setenforce 0
-[root@localhost ~]# getenforce
+[root@localhost ~]$ setenforce 0
+[root@localhost ~]$ getenforce
 Permissive
-[root@localhost ~]# setenforce 1
-[root@localhost ~]# getenforce
+[root@localhost ~]$ setenforce 1
+[root@localhost ~]$ getenforce
 Enforcing
 ```
 
@@ -44,7 +44,7 @@ To disable SELinux, pass `selinux=0` during boot.
 You can also configure SELinux mode by modifying the `/etc/selinux/config` file:
 
 ```bash
-[root@localhost ~]# cat /etc/selinux/config
+[root@localhost ~]$ cat /etc/selinux/config
 
 # This file controls the state of SELinux on the system.
 # SELINUX= can take one of these three values:
@@ -114,14 +114,14 @@ system_u:object_r:etc_t:s0 ssh_config
 Moving a file, on the other hand, since it does not create a new inode, doesn't modify the context of that file. If you want to set a new context for that file according to its new path, run `mv -Z`:
 
 ```bash
-[root@localhost ~]# touch file.txt
-[root@localhost ~]# mv file.txt /etc/
-[root@localhost ~]# ls -Z /etc/file.txt
+[root@localhost ~]$ touch file.txt
+[root@localhost ~]$ mv file.txt /etc/
+[root@localhost ~]$ ls -Z /etc/file.txt
 unconfined_u:object_r:admin_home_t:s0 /etc/file.txt
-[root@localhost ~]# rm -rf /etc/file.txt
-[root@localhost ~]# touch file.txt
-[root@localhost ~]# mv -Z file.txt /etc/
-[root@localhost ~]# ls -Z /etc/file.txt
+[root@localhost ~]$ rm -rf /etc/file.txt
+[root@localhost ~]$ touch file.txt
+[root@localhost ~]$ mv -Z file.txt /etc/
+[root@localhost ~]$ ls -Z /etc/file.txt
 unconfined_u:object_r:etc_t:s0 /etc/file.txt
 ```
 
@@ -130,27 +130,27 @@ unconfined_u:object_r:etc_t:s0 /etc/file.txt
 To manually change a label (temporary change), you can use `chcon`:
 
 ```bash
-[root@localhost ~]# touch file.txt
-[root@localhost ~]# ls -Z file.txt 
+[root@localhost ~]$ touch file.txt
+[root@localhost ~]$ ls -Z file.txt 
 unconfined_u:object_r:admin_home_t:s0 file.txt
-[root@localhost ~]# chcon -t 'default_t' file.txt 
-[root@localhost ~]# ls -Z file.txt 
+[root@localhost ~]$ chcon -t 'default_t' file.txt 
+[root@localhost ~]$ ls -Z file.txt 
 unconfined_u:object_r:default_t:s0 file.txt
 ```
 
 This relabel technique will survive reboot, but it is still considered temporary because, if `restorecon` is run on that file, it will replace the modified label with its correct context (based on the database `/etc/selinux/targeted/context/files/`):
 
 ```bash
-[root@localhost ~]# ls -Z file.txt 
+[root@localhost ~]$ ls -Z file.txt 
 unconfined_u:object_r:default_t:s0 file.txt
-[root@localhost ~]# restorecon -v file.txt 
+[root@localhost ~]$ restorecon -v file.txt 
 Relabeled /root/file.txt from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:admin_home_t:s0
 ```
 
 To restore the right policy for a directory and its children, run `restorecon -R`:
 
 ```bash
-[root@localhost /]# restorecon -R /new
+[root@localhost /]$ restorecon -R /new
 ```
 
 The recommended way of changing a context label is through the `semanage fcontext` command, which displays and modifies the policies that determine the context label of a file.
@@ -158,13 +158,13 @@ The recommended way of changing a context label is through the `semanage fcontex
 The command is not installed by default, you need to install the `policycoreutils-python-utils` package:
 
 ```bash
-[root@localhost /]# dnf install policycoreutils-python-utils -y > /dev/null
+[root@localhost /]$ dnf install policycoreutils-python-utils -y > /dev/null
 ```
 
 To list all the policies, you can run `semanage fcontext -l`:
 
 ```bash
-[root@localhost ~]# semanage fcontext -l | grep '(/.*)?' | tail -5
+[root@localhost ~]$ semanage fcontext -l | grep '(/.*)?' | tail -5
 /var/www/svn/hooks(/.*)?                           all files          system_u:object_r:httpd_sys_script_exec_t:s0 
 /var/www/usage(/.*)?                               all files          system_u:object_r:webalizer_rw_content_t:s0 
 /var/www/wiki[0-9]?(/.*)?                          all files          system_u:object_r:mediawiki_rw_content_t:s0 
@@ -177,18 +177,18 @@ SELinux policies allow regex and many policies use **the pirate** (`(/.*)?`), wh
 To create a new policy, run `semanage fcontext -a`:
 
 ```bash
-[root@localhost /]# mkdir /new
-[root@localhost /]# ls -dZ /new
+[root@localhost /]$ mkdir /new
+[root@localhost /]$ ls -dZ /new
 unconfined_u:object_r:default_t:s0 /new
-[root@localhost /]# semanage fcontext -a -t 'tmp_t' '/new(/.*)?'
-[root@localhost /]# restorecon -v /new
+[root@localhost /]$ semanage fcontext -a -t 'tmp_t' '/new(/.*)?'
+[root@localhost /]$ restorecon -v /new
 Relabeled /new from unconfined_u:object_r:default_t:s0 to unconfined_u:object_r:tmp_t:s0
 ```
 
 With `semanage fcontext -l -C` you can list only the local policies:
 
 ```bash
-[root@localhost /]# semanage fcontext -l -C
+[root@localhost /]$ semanage fcontext -l -C
 SELinux fcontext                                   type               Context
 
 /new(/.*)?                                         all files          system_u:object_r:tmp_t:s0 
@@ -197,10 +197,10 @@ SELinux fcontext                                   type               Context
 To delete a policy, run `semanage fcontext -d`:
 
 ```bash
-[root@localhost /]# semanage fcontext -d '/new(/.*)?'
-[root@localhost /]# ls -dZ /new
+[root@localhost /]$ semanage fcontext -d '/new(/.*)?'
+[root@localhost /]$ ls -dZ /new
 unconfined_u:object_r:tmp_t:s0 /new
-[root@localhost /]# restorecon -v /new
+[root@localhost /]$ restorecon -v /new
 Relabeled /new from unconfined_u:object_r:tmp_t:s0 to unconfined_u:object_r:default_t:s0
 ```
 
@@ -213,7 +213,7 @@ The command to interact with SELinux is `semanage boolean`.
 To list all the booleans, run `semanage boolean -l`:
 
 ```bash
-[root@localhost /]# semanage boolean -l | grep 'httpd'
+[root@localhost /]$ semanage boolean -l | grep 'httpd'
 httpd_anon_write               (off  ,  off)  Allow httpd to anon write
 httpd_builtin_scripting        (on   ,   on)  Allow httpd to builtin scripting
 httpd_can_check_spam           (off  ,  off)  Allow httpd to can check spam
@@ -266,30 +266,30 @@ The output displays two states for each boolean, `(off  , off)`, the first is th
 To change the current state of a boolean, run `setsebool`:
 
 ```bash
-[root@localhost /]# setsebool httpd_use_nfs on
-[root@localhost /]# semanage boolean -l | grep httpd_use_nfs
+[root@localhost /]$ setsebool httpd_use_nfs on
+[root@localhost /]$ semanage boolean -l | grep httpd_use_nfs
 httpd_use_nfs                  (on   ,  off)  Allow httpd to use nfs
 ```
 
 You can also view the current state of a specific boolean with `getsebool`:
 
 ```bash
-[root@localhost /]# getsebool httpd_use_nfs
+[root@localhost /]$ getsebool httpd_use_nfs
 httpd_use_nfs --> on
 ```
 
 To change also the persistent state, run `setsebool -P`:
 
 ```bash
-[root@localhost /]# setsebool -P httpd_use_nfs on
-[root@localhost /]# semanage boolean -l | grep httpd_use_nfs
+[root@localhost /]$ setsebool -P httpd_use_nfs on
+[root@localhost /]$ semanage boolean -l | grep httpd_use_nfs
 httpd_use_nfs                  (on   ,   on)  Allow httpd to use nfs
 ```
 
 As for `semanage fcontext`, also for booleans you can list only booleans that have been modified. Use `semanage boolean -l -C`:
 
 ```bash
-[root@localhost /]# semanage boolean -l -C
+[root@localhost /]$ semanage boolean -l -C
 SELinux boolean                State  Default Description
 
 httpd_use_nfs                  (on   ,   on)  Allow httpd to use nfs
@@ -312,8 +312,8 @@ The example shows that the applications that have the `http_port_t` port label c
 To add a port to a port label, run `semanage port -a` specifying the type of the context label and the port to add:
 
 ```bash
-[root@localhost httpd]# semanage port -a -t 'http_port_t' -p tcp 82
-[root@localhost httpd]# semanage port -l | grep '^http_port_t'
+[root@localhost httpd]$ semanage port -a -t 'http_port_t' -p tcp 82
+[root@localhost httpd]$ semanage port -l | grep '^http_port_t'
 http_port_t                    tcp      82, 80, 81, 443, 488, 8008, 8009, 8443, 9000
 http_port_t                    udp      80, 443
 ```
@@ -325,7 +325,7 @@ http_port_t                    udp      80, 443
 Whenever SELinux denies an action, that action gets recorded in `/var/log/audit/audit.log` as an AVC (Access Vector Cache) message. These logs are collected by the `auditd` daemon, not by `rsyslog`:
 
 ```bash
-[root@localhost ~]# grep 'type=AVC' /var/log/audit/audit.log | tail -1 
+[root@localhost ~]$ grep 'type=AVC' /var/log/audit/audit.log | tail -1 
 type=AVC msg=audit(1792923645.885:136): avc:  denied  { name_bind } for  pid=2019 comm="httpd" src=111 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:portmap_port_t:s0 tclass=tcp_socket permissive=0
 ```
 
@@ -334,7 +334,7 @@ The log explains that `httpd` was denied. The reason for this is because I chang
 For querying audit logs you can also use `ausearch`, through which you can specify the message type with the `-m` flag:
 
 ```bash
-[root@localhost ~]# ausearch -m AVC | tail
+[root@localhost ~]$ ausearch -m AVC | tail
 ----
 time->Sun Oct 25 11:20:45 2026
 type=PROCTITLE msg=audit(1792923645.885:135): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
@@ -350,7 +350,7 @@ type=AVC msg=audit(1792923645.885:136): avc:  denied  { name_bind } for  pid=201
 The errors are also logged in `/var/log/messages`:
 
 ```bash
-[root@localhost ~]# grep 'httpd' /var/log/messages
+[root@localhost ~]$ grep 'httpd' /var/log/messages
 Oct 25 11:20:45 localhost systemd[1]: Starting httpd.service - The Apache HTTP Server...
 Oct 25 11:20:45 localhost (httpd)[2019]: httpd.service: Referenced but unset environment variable evaluates to an empty string: OPTIONS
 Oct 25 11:20:45 localhost httpd[2019]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to suppress this message
@@ -368,7 +368,7 @@ The `httpd` service failed to start because of `(13)Permission denied: AH00072: 
 The same information can be of course retrieved with `journalctl` and filtering by unit:
 
 ```bash
-[root@localhost ~]# journalctl -u 'httpd' 
+[root@localhost ~]$ journalctl -u 'httpd' 
 Oct 25 11:20:45 localhost.localdomain systemd[1]: Starting httpd.service - The Apache HTTP Server...
 Oct 25 11:20:45 localhost.localdomain (httpd)[2019]: httpd.service: Referenced but unset environment variable evaluates to an empty string: OPTIONS
 Oct 25 11:20:45 localhost.localdomain httpd[2019]: AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using localhost.localdomain. Set the 'ServerName' directive globally to su>
@@ -386,14 +386,14 @@ Oct 25 11:20:45 localhost.localdomain systemd[1]: Failed to start httpd.service 
 If you are unsure whether the problem is caused by SELinux, a valid technique could be to set SELinux to `permissive` and then check if the issue does not appear anymore:
 
 ```bash
-[root@localhost ~]# systemctl enable --now httpd
+[root@localhost ~]$ systemctl enable --now httpd
 Job for httpd.service failed because the control process exited with error code.
 See "systemctl status httpd.service" and "journalctl -xeu httpd.service" for details.
-[root@localhost ~]# setenforce 0
-[root@localhost ~]# getenforce
+[root@localhost ~]$ setenforce 0
+[root@localhost ~]$ getenforce
 Permissive
-[root@localhost ~]# systemctl enable --now httpd
-[root@localhost ~]# echo $?
+[root@localhost ~]$ systemctl enable --now httpd
+[root@localhost ~]$ echo $?
 0
 ```
 
