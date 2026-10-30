@@ -38,7 +38,7 @@ brw-rw----. 1 root disk 8, 1 Oct  9 21:49 /dev/sda1
 
 ### MBR
 
-The MBR partitioning scheme is the standard on systems that run ***BIOS** firmware.
+The MBR partitioning scheme is the standard on systems that run **BIOS** firmware.
 
 Now it's legacy because of its 32-bit partition size, which allows up to 2 TiB disk and partition size. 
 
@@ -46,7 +46,7 @@ It also supports a maximum of 4 primary partitions. To overcome this limit, MBR 
 
 ### GPT
 
-THE GPT partitioning scheme is the standard on system that run ****UEFI** firmware.
+THE GPT partitioning scheme is the standard on system that run **UEFI** firmware.
 
 It uses a 64-bit partition size and provides a GUID (globally unique identifier) to identify each disk and partition.
 

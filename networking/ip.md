@@ -10,7 +10,7 @@ IPv4 addresses is a 32-bit number, expressed as four octets (8-bit) in decimal f
 192.168.178.3
 ```
 
-It it divided into 2 parts: the network prefix and the host number. The number of bits of the network prefix is variable (CIDR). What divides the network prefix from the host number is the **network mask**, a binary mask that indicates how many bits belong to the network segment and how many to the host segment. The network masks can be represented either in CIDR notation (`/24`) or as four 8-bit octets in decimal format (`255.255.255.0`). This netmask sets 24 bits for the network and 8 for the host, which means 256 possible hosts. From this number, 2 hosts need to be subtracted, because they are reserved to the **network address** (lowest possible address) and the **broadcast address**.
+It is divided into 2 parts: the network prefix and the host number. The number of bits of the network prefix is variable (CIDR). What divides the network prefix from the host number is the **network mask**, a binary mask that indicates how many bits belong to the network segment and how many to the host segment. The network masks can be represented either in CIDR notation (`/24`) or as four 8-bit octets in decimal format (`255.255.255.0`). This netmask sets 24 bits for the network and 8 for the host, which means 256 possible hosts. From this number, 2 hosts need to be subtracted, because they are reserved to the **network address** (lowest possible address) and the **broadcast address**.
 
 ```bash
 [root@localhost sshd_config.d]$ ip -4 a show enp0s8
