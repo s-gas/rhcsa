@@ -24,7 +24,7 @@ WARNING: You are not superuser.  Watch out for permissions.
 Error: Error opening /dev/sdb: Permission denied
 Retry/Cancel? ^C
 [s-gas@localhost ~]$ sudo -i
-[root@localhost ~]# parted /dev/sdb print
+[root@localhost ~]$ parted /dev/sdb print
 Model: ATA VBOX HARDDISK (scsi)
 Disk /dev/sdb: 5369MB
 Sector size (logical/physical): 512B/512B
@@ -33,10 +33,10 @@ Disk Flags:
 
 Number  Start  End  Size  File system  Name  Flags
 
-[root@localhost ~]# parted /dev/sdb mkpart primary linux-swap 2048s 1GB
+[root@localhost ~]$ parted /dev/sdb mkpart primary linux-swap 2048s 1GB
 Information: You may need to update /etc/fstab.
 
-[root@localhost ~]# parted /dev/sdb print
+[root@localhost ~]$ parted /dev/sdb print
 Model: ATA VBOX HARDDISK (scsi)
 Disk /dev/sdb: 5369MB
 Sector size (logical/physical): 512B/512B
@@ -53,7 +53,7 @@ Remember that with the GPT partition scheme, the first argument of the `parted m
 Once you have a partition with `linux-swap` file system type, you can create a swap space by running `mkswap`:
 
 ```bash
-[root@localhost ~]# mkswap /dev/sdb1
+[root@localhost ~]$ mkswap /dev/sdb1
 Setting up swapspace version 1, size = 953 MiB (999288832 bytes)
 no label, UUID=eaf1662b-aa32-4103-88a8-eec2ad012318
 ```
@@ -63,11 +63,11 @@ no label, UUID=eaf1662b-aa32-4103-88a8-eec2ad012318
 To activate a swap space, run `swapon`:
 
 ```bash
-[root@localhost ~]# free -h
+[root@localhost ~]$ free -h
                total        used        free      shared  buff/cache   available
 Mem:           1.5Gi       284Mi       961Mi       8.3Mi       404Mi       1.3Gi
 Swap:          2.0Gi          0B       2.0Gi
-[root@localhost ~]# lsblk -f
+[root@localhost ~]$ lsblk -f
 NAME         FSTYPE      FSVER    LABEL UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
 sda                                                                                           
 ├─sda1       vfat        FAT32          B2AD-34AB                               585.6M     2% /boot/efi
@@ -79,8 +79,8 @@ sdb
 └─sdb1       swap        1              eaf1662b-aa32-4103-88a8-eec2ad012318                  
 sdc                                                                                           
 └─sdc1       xfs                        76fd7521-b3a8-4ff1-904c-99d95d64673e      380M     8% /mnt/new
-[root@localhost ~]# swapon /dev/sdb1
-[root@localhost ~]# free -h
+[root@localhost ~]$ swapon /dev/sdb1
+[root@localhost ~]$ free -h
                total        used        free      shared  buff/cache   available
 Mem:           1.5Gi       283Mi       961Mi       8.3Mi       404Mi       1.3Gi
 Swap:          2.9Gi          0B       2.9Gi
@@ -90,8 +90,8 @@ Swap:          2.9Gi          0B       2.9Gi
 To deactivate, run `swapoff`:
 
 ```bash
-[root@localhost ~]# swapoff /dev/sdb1
-[root@localhost ~]# free -h
+[root@localhost ~]$ swapoff /dev/sdb1
+[root@localhost ~]$ free -h
                total        used        free      shared  buff/cache   available
 Mem:           1.5Gi       283Mi       961Mi       8.3Mi       404Mi       1.3Gi
 Swap:          2.0Gi          0B       2.0Gi
@@ -110,10 +110,10 @@ Filename				Type		Size		Used		Priority
 To add a swap space persistently, add an entry to `/etc/fstab`:
 
 ```bash
-[root@localhost ~]# lsblk -f /dev/sdb1
+[root@localhost ~]$ lsblk -f /dev/sdb1
 NAME FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
 sdb1 swap   1           eaf1662b-aa32-4103-88a8-eec2ad012318                
-[root@localhost ~]# grep 'swap' /etc/fstab
+[root@localhost ~]$ grep 'swap' /etc/fstab
 UUID=5208dcad-d81b-41bd-b542-7cbd5add5281 none                    swap    defaults        0 0
 UUID=eaf1662b-aa32-4103-88a8-eec2ad012318 swap			  swap    defaults        0 0
 ```
@@ -123,7 +123,7 @@ The entry for swap space is the same as for other file systems, the difference i
 You can also specify the priority of the swap area. A swap area with higher priority will get used before one with lower priority. By default the priority is set to `-2`. You can set the priority in the fourth column. Instead of `defaults` you can specify `pri=X`:
 
 ```bash
-[root@localhost ~]# grep 'swap' /etc/fstab 
+[root@localhost ~]$ grep 'swap' /etc/fstab 
 UUID=5208dcad-d81b-41bd-b542-7cbd5add5281 none                    swap    pri=2        0 0
 UUID=eaf1662b-aa32-4103-88a8-eec2ad012318 swap			  swap    defaults        0 0
 ```
